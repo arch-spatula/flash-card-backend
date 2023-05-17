@@ -25,3 +25,15 @@ deno test
 ```sh
 deno bench
 ```
+
+## Card 스키마
+
+```json
+{
+  "_id": "foo",
+  "question": "CPU의 본딧말",
+  "answer": "Central Processing Unit",
+  "submitDate": "Wed May 17 2023 21:11:26 GMT+0900 (한국 표준시)",
+  "stackCount": "0"
+}
+```
