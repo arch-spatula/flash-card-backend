@@ -53,12 +53,24 @@ async function addCard(ctx: Context) {
   }
 }
 
-function getCards(ctx: Context) {
-  const { id } = helpers.getQuery(ctx, { mergeParams: true });
+async function getCards(ctx: Context) {
+  // const { id } = helpers.getQuery(ctx, { mergeParams: true });
   // ctx.response.body = `check ${id} and ${APP_ID}, ${CARD_API_KEY}`;
   try {
     ctx.response.status = 200;
     ctx.response.body = "??";
+    const body = await ctx.request.body();
+    const card = await body.value;
+    const URI = `${BASE_URI}/find`;
+    const query = {
+      collection: COLLECTION,
+      database: DATABASE,
+      dataSource: DATA_SOURCE,
+      document: card,
+    };
+    options.body = JSON.stringify(query);
+    const dataResponse = await fetch(URI, options);
+    console.log(await dataResponse.json());
   } catch (error) {
     ctx.response.body = {
       success: false,
