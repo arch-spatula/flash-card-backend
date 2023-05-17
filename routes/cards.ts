@@ -7,7 +7,7 @@ router
   .get("/api", (ctx) => {
     ctx.response.body = "hello world!";
   })
-  .get("/api/card/:id", getCards)
+  .get("/api/card", getCards)
   .post("/api/card", addCard);
 
 export default router;
