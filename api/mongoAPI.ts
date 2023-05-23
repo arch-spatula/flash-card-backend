@@ -11,6 +11,11 @@ class MongoAPI {
     headers: { "Content-Type": string; "api-key": string };
     body: BodyInit;
   };
+  private cardBody: {
+    dataSource: string;
+    database: string;
+    collection: string;
+  };
   private constructor() {
     this.baseURL = `https://us-west-2.aws.data.mongodb-api.com/app/${APP_ID}/endpoint/data/v1/action`;
     this.options = {
@@ -19,11 +24,12 @@ class MongoAPI {
         "Content-Type": "application/json",
         "api-key": CARD_API_KEY,
       },
-      body: JSON.stringify({
-        dataSource: "Cluster0",
-        database: "cards_db",
-        collection: "cards",
-      }),
+      body: "",
+    };
+    this.cardBody = {
+      dataSource: "Cluster0",
+      database: "cards_db",
+      collection: "cards",
     };
   }
 
@@ -40,57 +46,46 @@ class MongoAPI {
 
   async postCards(document: CardRecord) {
     return await fetch(`${this.baseURL}/insertOne`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "api-key": CARD_API_KEY,
-      },
+      ...this.options,
       body: JSON.stringify({
-        dataSource: "Cluster0",
-        database: "cards_db",
-        collection: "cards",
+        ...this.cardBody,
         document,
       }),
     });
   }
 
   async patchCards(document: CardRecord) {
-    const {} = document;
+    const {
+      getQuestion: question,
+      getAnswer: answer,
+      getStackCount: stackCount,
+      getSubmitDate: submitDate,
+      getId: $oid,
+    } = document;
+
     return await fetch(`${this.baseURL}/updateOne`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "api-key": CARD_API_KEY,
-      },
+      ...this.options,
       body: JSON.stringify({
-        dataSource: "Cluster0",
-        database: "cards_db",
-        collection: "cards",
-        filter: { _id: { $oid: document.getId } },
+        ...this.cardBody,
+        filter: { _id: { $oid } },
         update: {
           $set: {
-            question: document.getQuestion,
-            answer: document.getAnswer,
-            stackCount: document.getStackCount,
-            submitDate: document.getSubmitDate,
+            question,
+            answer,
+            stackCount,
+            submitDate,
           },
         },
       }),
     });
   }
 
-  async deleteCards(id: string) {
+  async deleteCards($oid: string) {
     return await fetch(`${this.baseURL}/deleteOne`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "api-key": CARD_API_KEY,
-      },
+      ...this.options,
       body: JSON.stringify({
-        dataSource: "Cluster0",
-        database: "cards_db",
-        collection: "cards",
-        filter: { _id: { $oid: id } },
+        ...this.cardBody,
+        filter: { _id: { $oid } },
       }),
     });
   }
@@ -110,9 +105,6 @@ try {
     "646a089f1c75ae5b5752d35d"
   );
   console.log(await mongoAPI.patchCards(card));
-  // console.log(new ObjectId("6466174969f8ad73a9122e39"));
-  // console.log(await mongoApi.getCards());
-  // console.log(await mongoApi.postCards(card));
 } catch (error) {
   console.log(error);
 }
