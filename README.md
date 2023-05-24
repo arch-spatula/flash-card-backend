@@ -17,7 +17,7 @@ deno task dev
 ## Run the tests
 
 ```sh
-deno test
+deno test --allow-read
 ```
 
 ## Run the benchmarks
@@ -30,10 +30,10 @@ deno bench
 
 ```json
 {
-  "_id": "foo",
   "question": "CPU의 본딧말",
   "answer": "Central Processing Unit",
   "submitDate": "Wed May 17 2023 21:11:26 GMT+0900 (한국 표준시)",
-  "stackCount": "0"
+  "stackCount": "0",
+  "userId": "1"
 }
 ```
