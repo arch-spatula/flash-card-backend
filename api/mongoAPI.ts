@@ -1,5 +1,10 @@
 import { config } from "https://deno.land/x/dotenv@v3.2.2/mod.ts";
 import CardRecord from "../model/cards.ts";
+import {
+  hash,
+  genSalt,
+  compare,
+} from "https://deno.land/x/bcrypt@v0.4.1/mod.ts";
 
 const { APP_ID, CARD_API_KEY } = config();
 
@@ -14,7 +19,7 @@ class MongoAPI {
   private cardBody: {
     dataSource: string;
     database: string;
-    collection: string;
+    collection: "cards" | "user";
   };
   private constructor() {
     this.baseURL = `https://us-west-2.aws.data.mongodb-api.com/app/${APP_ID}/endpoint/data/v1/action`;
@@ -89,22 +94,23 @@ class MongoAPI {
       }),
     });
   }
+
+  async singup({ email, password }: { email: string; password: string }) {
+    //
+    // const salt = await genSalt(8);
+    // const passwordHash = await hash(password, salt);
+    const passwordHash = await hash(password);
+    const result = compare(password, passwordHash);
+    return result;
+  }
   async singin() {}
-  async singup() {}
 }
 
 const mongoAPI = MongoAPI.getInstance();
 
 try {
-  const card = new CardRecord(
-    "순수 함수를 활용합니다.",
-    "부작용이 없습니다.",
-    new Date(),
-    2,
-    "1",
-    "646a089f1c75ae5b5752d35d"
-  );
-  console.log(await mongoAPI.patchCards(card));
+  const user = { email: "user@email.com", password: "1234test" };
+  console.log(await mongoAPI.singup(user));
 } catch (error) {
   console.log(error);
 }
