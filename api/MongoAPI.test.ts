@@ -1,10 +1,7 @@
 import { assertEquals } from "https://deno.land/std@0.188.0/testing/asserts.ts";
 import { it, beforeAll } from "https://deno.land/std@0.188.0/testing/bdd.ts";
-// import { config } from "https://deno.land/x/dotenv@v3.2.2/mod.ts";
 import CardRecord from "../model/cards.ts";
 import MongoAPI from "./mongoAPI.ts";
-
-// const { APP_ID, CARD_API_KEY } = config();
 
 Deno.test("MongoAPI", () => {
   let mongoAPI: MongoAPI;
@@ -53,5 +50,49 @@ Deno.test("MongoAPI", () => {
 
     assertEquals(response.status, 200);
     // 여기에서 데이터에 대한 추가 검증을 수행할 수 있습니다.
+  });
+
+  it("deleteCards should delete a card from the database", async () => {
+    const cardId = "card123";
+    const response = await mongoAPI.deleteCards(cardId);
+    assertEquals(response.status, 200);
+    // 여기에서 데이터에 대한 추가 검증을 수행할 수 있습니다.
+  });
+
+  it("signup should create a new user if the email is not already registered", async () => {
+    const email = "newuser@example.com";
+    const password = "password123";
+    const response = await mongoAPI.signup({ email, password });
+    assertEquals(response.status, 200);
+    // 여기에서 데이터에 대한 추가 검증을 수행할 수 있습니다.
+  });
+
+  it("signup should throw an error if the email is already registered", async () => {
+    const email = "existinguser@example.com";
+    const password = "password123";
+    const response = await mongoAPI.signup({ email, password });
+    assertEquals(response.error, "이미 가입한 아이디입니다.");
+  });
+
+  it("signin should return the user document if the email and password are correct", async () => {
+    const email = "existinguser@example.com";
+    const password = "password123";
+    const response = await mongoAPI.signin({ email, password });
+    assertEquals(response.status, 200);
+    // 여기에서 데이터에 대한 추가 검증을 수행할 수 있습니다.
+  });
+
+  it("signin should throw an error if the email is not registered", async () => {
+    const email = "nonexistentuser@example.com";
+    const password = "password123";
+    const response = await mongoAPI.signin({ email, password });
+    assertEquals(response.error, "이메일이 없습니다.");
+  });
+
+  it("signin should throw an error if the password is incorrect", async () => {
+    const email = "existinguser@example.com";
+    const password = "incorrectpassword";
+    const response = await mongoAPI.signin({ email, password });
+    assertEquals(response.error, "비밀번호가 알치하지 않습니다.");
   });
 });
