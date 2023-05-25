@@ -5,10 +5,10 @@ import {
   genSalt,
   compare,
 } from "https://deno.land/x/bcrypt@v0.4.1/mod.ts";
-
-import { makeToken } from "../util/token.ts";
+import { Token } from "../util/token.ts";
 
 const mongoAPI = MongoAPI.getInstance();
+const token = Token.getInstance();
 
 async function signup({ request, response }: Context) {
   try {
@@ -63,7 +63,7 @@ async function signin({ request, response, cookies }: Context) {
         response.status = 201;
         response.body = document;
 
-        const { jwt, expires } = await makeToken(document._id, 60 * 60);
+        const { jwt, expires } = await token.makeToken(document._id, 60 * 60);
         cookies.set("user", jwt, expires);
       } else {
         throw Error("비밀번호가 알치하지 않습니다.");
