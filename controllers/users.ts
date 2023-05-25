@@ -6,6 +6,8 @@ import {
   compare,
 } from "https://deno.land/x/bcrypt@v0.4.1/mod.ts";
 
+import { create, getNumericDate } from "https://deno.land/x/djwt@v2.8/mod.ts";
+
 const mongoAPI = MongoAPI.getInstance();
 
 async function signup({ request, response }: Context) {
@@ -56,9 +58,23 @@ async function signin({ request, response, cookies }: Context) {
     if (!document) throw Error("이메일이 없습니다.");
     else {
       if (await compare(card.password, document.passwordHash)) {
+        const key = await crypto.subtle.generateKey(
+          { name: "HMAC", hash: { name: "SHA-512" } },
+          true,
+          ["sign", "verify"]
+        );
+        const jwt = await create(
+          { alg: "HS512" },
+          { exp: getNumericDate(60 * 60), sub: document._id },
+          key
+        );
+
         response.status = 201;
         response.body = document;
-        cookies.set("user", document._id);
+
+        cookies.set("user", jwt, {
+          expires: new Date(new Date().getTime() + 60 * 60 * 1000),
+        });
       } else {
         throw Error("비밀번호가 알치하지 않습니다.");
       }
