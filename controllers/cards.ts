@@ -1,7 +1,7 @@
 import { helpers } from "https://deno.land/x/oak@v12.4.0/mod.ts";
 import type { Context } from "https://deno.land/x/oak@v12.4.0/mod.ts";
 import MongoAPI from "../api/mongoAPI.ts";
-import { Token } from "../util/token.ts";
+import Token from "../util/token.ts";
 import CardRecord from "../model/cards.ts";
 
 const mongoAPI = MongoAPI.getInstance();
@@ -70,5 +70,7 @@ async function getCards({ response, cookies }: Context) {
     };
   }
 }
+
+async function updateCard() {}
 
 export { getCards, addCard };
