@@ -1,10 +1,5 @@
 import { config } from "https://deno.land/x/dotenv@v3.2.2/mod.ts";
 import CardRecord from "../model/cards.ts";
-import {
-  hash,
-  genSalt,
-  compare,
-} from "https://deno.land/x/bcrypt@v0.4.1/mod.ts";
 
 const { APP_ID, CARD_API_KEY } = config();
 
@@ -125,39 +120,16 @@ class MongoAPI {
     }
   }
 
-  async signup({ email, password }: { email: string; password: string }) {
+  async postUser({
+    email,
+    passwordHash,
+    passwordSalt,
+  }: {
+    email: string;
+    passwordHash: string;
+    passwordSalt: string;
+  }) {
     try {
-      if ((await this.getUser(email)) === null) {
-        return await this.postUser(email, password);
-      } else {
-        throw Error("이미 가입한 아이디입니다.");
-      }
-    } catch (error) {
-      return error;
-    }
-  }
-
-  async signin({ email, password }: { email: string; password: string }) {
-    try {
-      const document = await this.getUser(email);
-      if (document === null) {
-        throw Error("이메일이 없습니다.");
-      } else {
-        if (!(await compare(password, document.passwordHash))) {
-          throw Error("비밀번호가 알치하지 않습니다.");
-        } else {
-          return document;
-        }
-      }
-    } catch (error) {
-      return error;
-    }
-  }
-
-  private async postUser(email: string, password: string) {
-    try {
-      const passwordSalt = await genSalt(8);
-      const passwordHash = await hash(password, passwordSalt);
       const result = await fetch(`${this.baseURL}/insertOne`, {
         ...this.options,
         body: JSON.stringify({
@@ -171,7 +143,7 @@ class MongoAPI {
     }
   }
 
-  private async getUser(email: string) {
+  async getUser(email: string) {
     try {
       const result = await fetch(`${this.baseURL}/findOne`, {
         ...this.options,
