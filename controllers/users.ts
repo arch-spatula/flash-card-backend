@@ -1,11 +1,11 @@
 import type { Context } from "https://deno.land/x/oak@v12.4.0/mod.ts";
 import MongoAPI from "../api/mongoAPI.ts";
+import Token from "../util/token.ts";
 import {
   hash,
   genSalt,
   compare,
 } from "https://deno.land/x/bcrypt@v0.4.1/mod.ts";
-import Token from "../util/token.ts";
 
 const mongoAPI = MongoAPI.getInstance();
 const token = Token.getInstance();
@@ -53,7 +53,7 @@ async function signin({ request, response, cookies }: Context) {
 
     const card = await request.body().value;
     if (!card.email || !card.password) {
-      throw Error("이메일 혹은 비밀 번호가 없습니다.");
+      throw Error("이메일 혹은 비밀번호가 없습니다.");
     }
 
     const document = await mongoAPI.getUser(card.email);
