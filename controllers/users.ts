@@ -5,7 +5,7 @@ import {
   genSalt,
   compare,
 } from "https://deno.land/x/bcrypt@v0.4.1/mod.ts";
-import { Token } from "../util/token.ts";
+import Token from "../util/token.ts";
 
 const mongoAPI = MongoAPI.getInstance();
 const token = Token.getInstance();
