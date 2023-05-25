@@ -9,6 +9,11 @@ type Collection = {
   collection: string;
 };
 
+/**
+ * @see https://www.mongodb.com/developer/languages/rust/getting-started-deno-mongodb/
+ * 모든 method가 POST로 고정되어 있습니다. 특정 메서드에 맞게 갱신은 없습니다.
+ */
+
 class MongoAPI {
   private static instance: MongoAPI;
   private baseURL: string;
