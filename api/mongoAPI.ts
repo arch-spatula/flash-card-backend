@@ -53,11 +53,11 @@ class MongoAPI {
     return MongoAPI.instance;
   }
 
-  async getCards() {
+  async getCards(userId: string) {
     try {
       const result = await fetch(`${this.baseURL}/find`, {
         ...this.options,
-        body: JSON.stringify({ ...this.cardBody, filter: { userId: "1" } }),
+        body: JSON.stringify({ ...this.cardBody, filter: { userId } }),
       });
       return result.json();
     } catch (error) {
