@@ -59,40 +59,21 @@ Deno.test("MongoAPI", () => {
     // 여기에서 데이터에 대한 추가 검증을 수행할 수 있습니다.
   });
 
-  it("signup should create a new user if the email is not already registered", async () => {
-    const email = "newuser@example.com";
-    const password = "password123";
-    const response = await mongoAPI.signup({ email, password });
+  it("getUser should fetch user from the database", async () => {
+    const email = "user@example.com";
+    const response = await mongoAPI.getUser(email);
     assertEquals(response.status, 200);
-    // 여기에서 데이터에 대한 추가 검증을 수행할 수 있습니다.
+    // 데이터에 대한 추가 검증을 수행할 수 있습니다.
   });
 
-  it("signup should throw an error if the email is already registered", async () => {
-    const email = "existinguser@example.com";
-    const password = "password123";
-    const response = await mongoAPI.signup({ email, password });
-    assertEquals(response.error, "이미 가입한 아이디입니다.");
-  });
-
-  it("signin should return the user document if the email and password are correct", async () => {
-    const email = "existinguser@example.com";
-    const password = "password123";
-    const response = await mongoAPI.signin({ email, password });
+  it("postUser should insert a user into the database", async () => {
+    const user = {
+      email: "user@example.com",
+      passwordHash: "hashedPassword",
+      passwordSalt: "salt",
+    };
+    const response = await mongoAPI.postUser(user);
     assertEquals(response.status, 200);
-    // 여기에서 데이터에 대한 추가 검증을 수행할 수 있습니다.
-  });
-
-  it("signin should throw an error if the email is not registered", async () => {
-    const email = "nonexistentuser@example.com";
-    const password = "password123";
-    const response = await mongoAPI.signin({ email, password });
-    assertEquals(response.error, "이메일이 없습니다.");
-  });
-
-  it("signin should throw an error if the password is incorrect", async () => {
-    const email = "existinguser@example.com";
-    const password = "incorrectpassword";
-    const response = await mongoAPI.signin({ email, password });
-    assertEquals(response.error, "비밀번호가 알치하지 않습니다.");
+    // 데이터에 대한 추가 검증을 수행할 수 있습니다.
   });
 });
