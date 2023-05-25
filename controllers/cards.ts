@@ -1,78 +1,48 @@
 import { config } from "https://deno.land/x/dotenv@v3.2.2/mod.ts";
 import { helpers } from "https://deno.land/x/oak@v12.4.0/mod.ts";
 import type { Context } from "https://deno.land/x/oak@v12.4.0/mod.ts";
-// import { Bson, MongoClient } from "https://deno.land/x/mongo@v0.31.2/mod.ts";
+import MongoAPI from "../api/mongoAPI.ts";
 
-const { APP_ID, CARD_API_KEY } = config();
+const mongoAPI = MongoAPI.getInstance();
 
-const BASE_URI = `https://us-west-2.aws.data.mongodb-api.com/app/${APP_ID}/endpoint/data/v1/action`; // /action
-const DATA_SOURCE = "Cluster0";
-const DATABASE = "cards_db";
-const COLLECTION = "cards";
-
-const options = {
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json",
-    "api-key": CARD_API_KEY,
-  },
-  body: "",
-};
-
-async function addCard(ctx: Context) {
+async function addCard({ request, response }: Context) {
   try {
-    if (!ctx.request.hasBody) {
-      ctx.response.status = 400;
-      ctx.response.body = {
+    if (!request.hasBody) {
+      response.status = 400;
+      response.body = {
         success: false,
         msg: "No Data",
       };
     } else {
-      const body = await ctx.request.body();
+      const body = await request.body();
       const card = await body.value;
-      const URI = `${BASE_URI}/insertOne`;
 
-      const query = {
-        collection: COLLECTION,
-        database: DATABASE,
-        dataSource: DATA_SOURCE,
-        document: card,
-      };
-      options.body = JSON.stringify(query);
-      const dataResponse = await fetch(URI, options);
-      console.log(dataResponse);
-
-      ctx.response.status = 201;
-      ctx.response.body = "??";
+      response.status = 201;
+      response.body = await mongoAPI.postCards(card);
     }
   } catch (error) {
-    ctx.response.body = {
+    response.body = {
       success: false,
       msg: `${error}`,
     };
   }
 }
 
-async function getCards(ctx: Context) {
+async function getCards({ request, response, cookies }: Context) {
   // const { id } = helpers.getQuery(ctx, { mergeParams: true });
   // ctx.response.body = `check ${id} and ${APP_ID}, ${CARD_API_KEY}`;
   try {
-    ctx.response.status = 200;
-    ctx.response.body = "??";
-    const body = await ctx.request.body();
+    if (!(await cookies.get(""))) {
+      throw Error("인증이 안 되어 있습니다.");
+    }
+    const body = await request.body();
     const card = await body.value;
-    const URI = `${BASE_URI}/find`;
-    const query = {
-      collection: COLLECTION,
-      database: DATABASE,
-      dataSource: DATA_SOURCE,
-      document: card,
-    };
-    options.body = JSON.stringify(query);
-    const dataResponse = await fetch(URI, options);
-    console.log(await dataResponse.json());
+    console.log(card);
+
+    response.status = 200;
+    response.body = await mongoAPI.getCards();
   } catch (error) {
-    ctx.response.body = {
+    response.body = {
       success: false,
       msg: `${error}`,
     };
