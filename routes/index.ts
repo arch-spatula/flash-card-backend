@@ -10,7 +10,7 @@ router
   })
   .get("/api/card", getCards)
   .post("/api/card", addCard)
-  .post("/api/signup", signup)
-  .post("/api/signin", signin);
+  .post("/api/auth/signup", signup)
+  .post("/api/auth/signin", signin);
 
 export default router;
