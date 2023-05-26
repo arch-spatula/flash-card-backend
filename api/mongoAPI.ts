@@ -1,8 +1,7 @@
+import { config } from "https://deno.land/x/dotenv@v3.2.2/mod.ts";
 import CardRecord from "../model/cards.ts";
 
-const MONGO_URI = Deno.env.get("MONGO_URI")!;
-const CARD_API_KEY = Deno.env.get("CARD_API_KEY")!;
-
+const { CARD_API_KEY, MONGO_URI } = config();
 type Collection = {
   dataSource: string;
   database: string;

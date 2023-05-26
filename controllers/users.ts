@@ -15,23 +15,23 @@ async function signup({ request, response }: Context) {
     if (!request.hasBody) {
       throw Error("body가 없습니다.");
     }
-    const card = await request.body().value;
+    const input = await request.body().value;
 
-    if (!card.email || !card.password) {
+    if (!input.email || !input.password) {
       throw Error("이메일 혹은 비밀 번호가 없습니다.");
     }
 
-    const document = await mongoAPI.getUser(card.email);
+    const document = await mongoAPI.getUser(input.email);
 
     if (document !== null) {
       throw Error("이미 가입한 아이디입니다.");
     } else {
       const passwordSalt = await genSalt(8);
-      const passwordHash = await hash(card.password, passwordSalt);
+      const passwordHash = await hash(input.password, passwordSalt);
 
       response.status = 201;
       response.body = await mongoAPI.postUser({
-        email: card.email,
+        email: input.email,
         passwordHash,
         passwordSalt,
       });
@@ -51,15 +51,15 @@ async function signin({ request, response, cookies }: Context) {
       throw Error("body가 없습니다.");
     }
 
-    const card = await request.body().value;
-    if (!card.email || !card.password) {
+    const input = await request.body().value;
+    if (!input.email || !input.password) {
       throw Error("이메일 혹은 비밀번호가 없습니다.");
     }
 
-    const document = await mongoAPI.getUser(card.email);
-    if (!document) throw Error("이메일이 없습니다.");
+    const document = await mongoAPI.getUser(input.email);
+    if (document === null) throw Error("이메일이 없습니다.");
     else {
-      if (await compare(card.password, document.passwordHash)) {
+      if (await compare(input.password, document.passwordHash)) {
         response.status = 201;
         response.body = document;
 
