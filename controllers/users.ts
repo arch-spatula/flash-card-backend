@@ -25,7 +25,7 @@ async function signup({ request, response }: Context) {
     if (document === undefined) throw Error("document is undefined");
 
     if (document !== null) {
-      throw Error("이미 가입한 아이디입니다.");
+      throw Error(`이미 가입한 아이디입니다. ${document.email}`);
     } else {
       const passwordSalt = await genSalt(8);
       const passwordHash = await hash(input.password, passwordSalt);
