@@ -6,6 +6,7 @@ import {
   updateCard,
 } from "../controllers/cards.ts";
 import { signin, signup } from "../controllers/users.ts";
+import MongoAPI from "../api/mongoAPI.ts";
 
 const router = new Router();
 
@@ -20,12 +21,10 @@ router
   .post("/api/auth/signup", signup)
   .post("/api/auth/signin", signin)
   .get("/api/secret", async (ctx) => {
-    await fetch("https://jsonplaceholder.typicode.com/todos/1")
-      .then((response) => response.json())
-      .then((json) => {
-        ctx.response.status = 200;
-        ctx.response.body = { json };
-      });
+    const mongoAPI = MongoAPI.getInstance();
+
+    ctx.response.status = 200;
+    ctx.response.body = await mongoAPI.getAllCards();
   });
 
 export default router;
