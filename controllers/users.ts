@@ -57,7 +57,7 @@ async function signin({ request, response, cookies }: Context) {
     }
 
     const document = await mongoAPI.getUser(input.email);
-    if (!document) throw Error("이메일이 없습니다.");
+    if (document === null) throw Error("이메일이 없습니다.");
     else {
       if (await compare(input.password, document.passwordHash)) {
         response.status = 201;
