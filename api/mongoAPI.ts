@@ -1,7 +1,7 @@
-import { config } from "https://deno.land/x/dotenv@v3.2.2/mod.ts";
 import CardRecord from "../model/cards.ts";
 
-const { APP_ID, CARD_API_KEY } = config();
+const MONGO_URI = Deno.env.get("MONGO_URI")!;
+const CARD_API_KEY = Deno.env.get("CARD_API_KEY")!;
 
 type Collection = {
   dataSource: string;
@@ -25,7 +25,7 @@ class MongoAPI {
   private cardBody: Collection;
   private userBody: Collection;
   private constructor() {
-    this.baseURL = `https://us-west-2.aws.data.mongodb-api.com/app/${APP_ID}/endpoint/data/v1/action`;
+    this.baseURL = MONGO_URI;
     this.options = {
       method: "POST",
       headers: {
