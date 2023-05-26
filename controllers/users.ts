@@ -1,11 +1,7 @@
 import type { Context } from "https://deno.land/x/oak@v12.4.0/mod.ts";
 import MongoAPI from "../api/mongoAPI.ts";
 import Token from "../util/token.ts";
-import {
-  hash,
-  genSalt,
-  compare,
-} from "https://deno.land/x/bcrypt@v0.4.1/mod.ts";
+import { compare, genSalt, hash } from "../util/customBcrypt.ts";
 
 const mongoAPI = MongoAPI.getInstance();
 const token = Token.getInstance();
