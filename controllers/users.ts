@@ -22,6 +22,7 @@ async function signup({ request, response }: Context) {
     }
 
     const document = await mongoAPI.getUser(input.email);
+    if (document === undefined) throw Error("document is undefined");
 
     if (document !== null) {
       throw Error("이미 가입한 아이디입니다.");
