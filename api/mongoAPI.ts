@@ -73,6 +73,18 @@ class MongoAPI {
     }
   }
 
+  async getAllCards() {
+    try {
+      const result = await fetch(`${this.baseURL}/find`, {
+        ...this.options,
+        body: JSON.stringify({ ...this.cardBody }),
+      });
+      return result.json();
+    } catch (error) {
+      return error;
+    }
+  }
+
   async postCards(document: CardRecord) {
     try {
       const result = await fetch(`${this.baseURL}/insertOne`, {
