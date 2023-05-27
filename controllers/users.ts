@@ -58,7 +58,7 @@ async function signin({ request, response, cookies }: Context) {
     else {
       if (await compare(input.password, document.passwordHash)) {
         response.status = 201;
-        response.body = document;
+        response.body = { email: document.email };
 
         const { jwt, expires } = await token.makeToken(document._id, 60 * 60);
         cookies.set("user", jwt, expires);
