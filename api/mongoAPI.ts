@@ -1,15 +1,8 @@
-// import { config } from "https://deno.land/x/dotenv@v3.2.2/mod.ts";
-// import { load } from "https://deno.land/std@0.189.0/dotenv/mod.ts";
+import { config } from "https://deno.land/x/dotenv@v3.2.2/mod.ts";
 import CardRecord from "../model/cards.ts";
 
-// const { CARD_API_KEY, MONGO_URI } = config();
-const MONGO_URI = Deno.env.get("MONGO_URI")!;
-const CARD_API_KEY = Deno.env.get("CARD_API_KEY")!;
-// if (!MONGO_URI || !CARD_API_KEY) throw Error("No Env Value");
-
-// const env = await load();
-// const MONGO_URI = env["MONGO_URI"];
-// const CARD_API_KEY = env["CARD_API_KEY"];
+const MONGO_URI = Deno.env.get("MONGO_URI") || config()["MONGO_URI"];
+const CARD_API_KEY = Deno.env.get("CARD_API_KEY") || config()["CARD_API_KEY"];
 
 type Collection = {
   dataSource: string;
