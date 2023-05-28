@@ -2,38 +2,197 @@
 
 플래시카드 백엔드를 다루는 레포지토리입니다.
 
-## Run the program
+## API 명세
 
-```sh
-deno run main.ts
+아래는 API 주소입니다.
+
+```
+https://flash-card-backend.deno.dev/
 ```
 
-## Run the program and watch for file changes
+### Auth
 
-```sh
-deno task dev
-```
+#### SignUp
 
-## Run the tests
+요청
 
-```sh
-deno test --allow-read
-```
+- URL: `api/auth/signup`
+- Method: `POST`
+- Headers:
+  - Content-Type: `application/json`
+- Body:
+  - email: `string`
+  - password: `string`
 
-## Run the benchmarks
+응답 예시
 
-```sh
-deno bench
-```
+- status: `201`
+- body:
+  - insertedId: 123abc
 
-## Card 스키마
+#### SignIn
+
+요청
+
+- URL: `api/auth/signin`
+- Method: `POST`
+- Headers:
+  - Content-Type: `application/json`
+- Body:
+  - email: `string`
+  - password: `string`
+
+응답 예시
+
+- status: `201`
+- body:
+  - email: `email`
+
+<!-- TODO: access_token으로 변환하기 -->
+
+### Card
+
+Card 스키마
 
 ```json
 {
+  "_id": "1234asdf",
   "question": "CPU의 본딧말",
   "answer": "Central Processing Unit",
   "submitDate": "Wed May 17 2023 21:11:26 GMT+0900 (한국 표준시)",
   "stackCount": "0",
   "userId": "1"
 }
+```
+
+#### createCard
+
+요청
+
+- URL: `api/card`
+- Method: `POST`
+- Headers:
+  - Content-Type: `application/json`
+- body:
+  - question: `string`
+  - answer: `string`
+  - submitDate: `Date`
+  - stackCount: `number`
+
+응답 예시
+
+- status: `201`
+- body:
+  - insertedId: `string`
+
+```json
+{
+  "insertedId": "1234asdf"
+}
+```
+
+#### getCards
+
+요청
+
+- URL: `api/card`
+- Method: `GET`
+
+응답 예시
+
+- status: `200`
+- body:
+  - documents:
+    - question: `string`
+    - answer: `string`
+    - submitDate: `Date`
+    - stackCount: `number`
+
+```json
+{
+  "documents": [
+    {
+      "_id": "1234asdf",
+      "question": "도큐사우르스 짱짱맨",
+      "answer": "킹정",
+      "submitDate": "Wed May 17 2023 21:11:26 GMT+0900 (한국 표준시)",
+      "stackCount": "0",
+      "userId": "1234asdf"
+    },
+    {
+      "_id": "1234asdf",
+      "question": "블로그를 더 간지나게 만드는 방법",
+      "answer": "github pages로 DIY로 만든다.",
+      "submitDate": "Wed May 17 2023 21:11:26 GMT+0900 (한국 표준시)",
+      "stackCount": "0",
+      "userId": "1234asdf"
+    }
+  ]
+}
+```
+
+#### updateCard
+
+요청
+
+- URL: `api/card/:id`
+- Method: `PATCH`
+- Headers:
+  - Content-Type: `application/json`
+- body:
+  - question: `string`
+  - answer: `string`
+  - submitDate: `Date`
+  - stackCount: `number`
+
+응답 예시
+
+- status: `200`
+- body:
+  - matchedCount: `number`
+  - modifiedCount: `number`
+
+```json
+{
+  "matchedCount": 1,
+  "modifiedCount": 1
+}
+```
+
+#### deleteCard
+
+요청
+
+- URL: `api/card/:id`
+- Method: `DELETE`
+
+응답 예시
+
+- status: `204`
+- body: (없음)
+
+## 실행 명령
+
+### Run the program
+
+```sh
+deno run main.ts
+```
+
+### Run the program and watch for file changes
+
+```sh
+deno task dev
+```
+
+### Run the tests
+
+```sh
+deno test --allow-read
+```
+
+### Run the benchmarks
+
+```sh
+deno bench
 ```
