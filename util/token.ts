@@ -1,8 +1,4 @@
-import {
-  create,
-  getNumericDate,
-  verify,
-} from "https://deno.land/x/djwt@v2.8/mod.ts";
+import { create, getNumericDate, verify } from '../deps.ts';
 
 class Token {
   private static instance: Token;
@@ -11,9 +7,9 @@ class Token {
   private constructor() {
     this.key = (async () => {
       const key = await crypto.subtle.generateKey(
-        { name: "HMAC", hash: { name: "SHA-512" } },
+        { name: 'HMAC', hash: { name: 'SHA-512' } },
         true,
-        ["sign", "verify"]
+        ['sign', 'verify']
       );
       return key;
     })();
@@ -28,7 +24,7 @@ class Token {
 
   async makeToken(userId: string, sec = 3600) {
     const jwt = await create(
-      { alg: "HS512" },
+      { alg: 'HS512' },
       { exp: getNumericDate(sec), sub: userId },
       await this.key
     );

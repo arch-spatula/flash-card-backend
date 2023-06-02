@@ -1,4 +1,4 @@
-import type { Context } from 'https://deno.land/x/oak@v12.4.0/mod.ts';
+import type { Context } from '../deps.ts';
 import MongoAPI from '../api/mongoAPI.ts';
 import Token from '../util/token.ts';
 import { compare, genSalt, hash } from '../util/customBcrypt.ts';
@@ -57,11 +57,13 @@ async function signin({ request, response, cookies }: Context) {
     if (document === null) throw Error('이메일이 없습니다.');
     else {
       if (await compare(input.password, document.passwordHash)) {
-        response.status = 201;
-        response.body = { email: document.email };
-
         const { jwt, expires } = await token.makeToken(document._id, 60 * 60);
+
+        // refresh token
         cookies.set('user', jwt, expires);
+        response.status = 201;
+        // access token
+        response.body = { access_token: jwt };
       } else {
         throw Error('비밀번호가 일치하지 않습니다.');
       }
