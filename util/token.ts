@@ -22,17 +22,27 @@ class Token {
     return Token.instance;
   }
 
-  async makeToken(userId: string, sec = 3600) {
+  async makeAccessToken(userId: string, expiresInSec = 3600) {
     const jwt = await create(
       { alg: 'HS512' },
-      { exp: getNumericDate(sec), sub: userId },
+      { exp: getNumericDate(expiresInSec), sub: userId },
       await this.key
     );
     return {
       jwt,
-      expires: {
-        expires: new Date(new Date().getTime() + sec * 1000),
-      },
+      expires: new Date(new Date().getTime() + expiresInSec * 1000),
+    };
+  }
+
+  async makeRefreshToken(userId: string, expiresInSec = 2592000) {
+    const jwt = await create(
+      { alg: 'HS512' },
+      { exp: getNumericDate(expiresInSec), sub: userId },
+      await this.key
+    );
+    return {
+      jwt,
+      expires: new Date(new Date().getTime() + expiresInSec * 1000),
     };
   }
 

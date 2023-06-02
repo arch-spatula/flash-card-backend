@@ -57,13 +57,17 @@ async function signin({ request, response, cookies }: Context) {
     if (document === null) throw Error('이메일이 없습니다.');
     else {
       if (await compare(input.password, document.passwordHash)) {
-        const { jwt, expires } = await token.makeToken(document._id, 60 * 60);
+        const { jwt: refreshToken, expires: refreshExpires } =
+          await token.makeRefreshToken(document._id);
 
-        // refresh token
-        cookies.set('user', jwt, expires);
+        const { jwt: access_token } = await token.makeAccessToken(
+          document._id,
+          60 * 60
+        );
+
+        cookies.set('user', refreshToken, { expires: refreshExpires });
         response.status = 201;
-        // access token
-        response.body = { access_token: jwt };
+        response.body = { access_token };
       } else {
         throw Error('비밀번호가 일치하지 않습니다.');
       }
