@@ -13,7 +13,7 @@ export {
   genSaltSync,
 } from 'https://deno.land/x/bcrypt@v0.4.1/mod.ts';
 
-export { Router } from 'https://deno.land/x/oak@v12.4.0/mod.ts';
+export { Router, testing } from 'https://deno.land/x/oak@v12.4.0/mod.ts';
 
 export type {
   Context,
@@ -24,4 +24,7 @@ export { helpers } from 'https://deno.land/x/oak@v12.4.0/mod.ts';
 
 export { beforeEach } from 'https://deno.land/std@0.188.0/testing/bdd.ts';
 
-export { assertEquals } from 'https://deno.land/std@0.188.0/testing/asserts.ts';
+export {
+  assertEquals,
+  assert,
+} from 'https://deno.land/std@0.188.0/testing/asserts.ts';
