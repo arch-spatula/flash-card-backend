@@ -15,7 +15,10 @@ export {
 
 export { Router } from 'https://deno.land/x/oak@v12.4.0/mod.ts';
 
-export type { Context } from 'https://deno.land/x/oak@v12.4.0/mod.ts';
+export type {
+  Context,
+  Middleware,
+} from 'https://deno.land/x/oak@v12.4.0/mod.ts';
 
 export { helpers } from 'https://deno.land/x/oak@v12.4.0/mod.ts';
 

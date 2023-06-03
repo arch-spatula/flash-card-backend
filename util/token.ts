@@ -46,8 +46,21 @@ class Token {
     };
   }
 
+  async refreshAccessToken(refreshToken: string) {
+    try {
+      const userId = await this.tokenToUserId(refreshToken);
+
+      if (!userId) throw new Error('토큰이 만료되었습니다.');
+
+      const { jwt: accessToken } = await this.makeAccessToken(userId);
+      return { accessToken, success: true };
+    } catch (error) {
+      return { accessToken: null, success: false };
+    }
+  }
+
   async tokenToUserId(jwt: string) {
-    const { sub } = await verify(jwt, await this.key);
+    const { sub } = await verify(jwt, await this.key, {});
     return sub;
   }
 }

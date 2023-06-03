@@ -6,14 +6,15 @@ import {
   updateCard,
 } from '../controllers/cards.ts';
 import { signin, signup } from '../controllers/users.ts';
+import { authMiddleware } from '../middleware/authMiddleware.ts';
 
 const router = new Router();
 
 router
-  .get('/api/card', getCards)
-  .post('/api/card', addCard)
-  .patch('/api/card/:id', updateCard)
-  .delete('/api/card/:id', deleteCard)
+  .get('/api/card', authMiddleware, getCards)
+  .post('/api/card', authMiddleware, addCard)
+  .patch('/api/card/:id', authMiddleware, updateCard)
+  .delete('/api/card/:id', authMiddleware, deleteCard)
   .post('/api/auth/signup', signup)
   .post('/api/auth/signin', signin);
 
