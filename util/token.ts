@@ -79,14 +79,16 @@ async function generateKey(): Promise<CryptoKey> {
   );
 }
 
+const privateKey = generateKey();
+
 async function generateRefreshToken(
-  key: Promise<CryptoKey>,
   userId: string,
-  expiresInSec = 2592000
+  expiresInSec = 2592000,
+  key = privateKey
 ) {
   const jwt = await create(
     { alg: 'HS512' },
-    { exp: getNumericDate(expiresInSec), userId },
+    { exp: getNumericDate(expiresInSec), sub: userId },
     await key
   );
   return {
@@ -96,13 +98,13 @@ async function generateRefreshToken(
 }
 
 async function generateAccessToken(
-  key: Promise<CryptoKey>,
   userId: string,
-  expiresInSec = 3600
+  expiresInSec = 3600,
+  key = privateKey
 ) {
   const jwt = await create(
     { alg: 'HS512' },
-    { exp: getNumericDate(expiresInSec), userId },
+    { exp: getNumericDate(expiresInSec), sub: userId },
     await key
   );
   return {
@@ -111,23 +113,23 @@ async function generateAccessToken(
   };
 }
 
-async function convertTokenToUserId(key: Promise<CryptoKey>, jwt: string) {
+/**
+ * sub을 사용해야 하는 이유
+ */
+async function convertTokenToUserId(jwt: string, key = privateKey) {
   const { sub: userId } = await verify(jwt, await key);
   return userId;
 }
 
-async function refreshAccessToken(
-  key: Promise<CryptoKey>,
-  refreshToken: string
-) {
+async function refreshAccessToken(refreshToken: string, key = privateKey) {
   try {
-    const userId = await convertTokenToUserId(key, refreshToken);
+    const userId = await convertTokenToUserId(refreshToken, key);
 
     if (!userId) {
       throw new TokenError('토큰이 만료되었습니다.');
     }
 
-    const { jwt: accessToken } = await generateAccessToken(key, userId);
+    const { jwt: accessToken } = await generateAccessToken(userId);
     return { accessToken, success: true };
   } catch (error) {
     if (error instanceof TokenError) {
@@ -138,11 +140,8 @@ async function refreshAccessToken(
   }
 }
 
-const privateKey = await generateKey();
-
 export {
   generateKey,
-  privateKey,
   generateRefreshToken,
   generateAccessToken,
   convertTokenToUserId,
