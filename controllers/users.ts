@@ -1,6 +1,9 @@
 import type { Context } from '../deps.ts';
 import MongoAPI from '../api/mongoAPI.ts';
-import Token from '../util/token.ts';
+import Token, {
+  generateAccessToken,
+  generateRefreshToken,
+} from '../util/token.ts';
 import { compare, genSalt, hash } from '../util/customBcrypt.ts';
 
 const mongoAPI = MongoAPI.getInstance();
@@ -58,16 +61,23 @@ async function signin({ request, response, cookies }: Context) {
     else {
       if (await compare(input.password, document.passwordHash)) {
         const { jwt: refreshToken, expires: refreshExpires } =
-          await token.makeRefreshToken(document._id);
+          await generateRefreshToken(document._id);
 
-        const { jwt: access_token } = await token.makeAccessToken(
+        const { jwt: access_token } = await generateAccessToken(
           document._id,
           60 * 60
         );
 
-        cookies.set('user', refreshToken, { expires: refreshExpires });
+        cookies.set('user', refreshToken, {
+          expires: refreshExpires,
+          httpOnly: true,
+          // secure: true, 암호화 방식 찾고 주석을 풀어주세요
+        });
         response.status = 201;
-        response.body = { access_token };
+        response.body = {
+          success: true,
+          access_token,
+        };
       } else {
         throw Error('비밀번호가 일치하지 않습니다.');
       }
