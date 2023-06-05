@@ -22,7 +22,11 @@ export type {
 
 export { helpers } from 'https://deno.land/x/oak@v12.4.0/mod.ts';
 
-export { beforeEach } from 'https://deno.land/std@0.188.0/testing/bdd.ts';
+export {
+  beforeEach,
+  it,
+  describe,
+} from 'https://deno.land/std@0.188.0/testing/bdd.ts';
 
 export {
   assertEquals,
