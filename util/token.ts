@@ -79,7 +79,7 @@ async function generateKey(): Promise<CryptoKey> {
   );
 }
 
-const privateKey = generateKey();
+const privateKey = await generateKey();
 
 async function generateRefreshToken(
   userId: string,
@@ -114,7 +114,7 @@ async function generateAccessToken(
 }
 
 /**
- * sub을 사용해야 하는 이유
+ * sub는 라이브러리에서 문자열을 할당하도록 예약되어 있습니다.
  */
 async function convertTokenToUserId(jwt: string, key = privateKey) {
   const { sub: userId } = await verify(jwt, await key);
@@ -132,11 +132,7 @@ async function refreshAccessToken(refreshToken: string, key = privateKey) {
     const { jwt: accessToken } = await generateAccessToken(userId);
     return { accessToken, success: true };
   } catch (error) {
-    if (error instanceof TokenError) {
-      return { error, success: false };
-    } else {
-      return { accessToken: null, success: false };
-    }
+    return { accessToken: null, success: false, error };
   }
 }
 
