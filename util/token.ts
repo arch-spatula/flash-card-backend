@@ -86,7 +86,7 @@ async function generateRefreshToken(
 ) {
   const jwt = await create(
     { alg: 'HS512' },
-    { exp: getNumericDate(expiresInSec), userId: userId },
+    { exp: getNumericDate(expiresInSec), userId },
     await key
   );
   return {
@@ -102,7 +102,7 @@ async function generateAccessToken(
 ) {
   const jwt = await create(
     { alg: 'HS512' },
-    { exp: getNumericDate(expiresInSec), userId: userId },
+    { exp: getNumericDate(expiresInSec), userId },
     await key
   );
   return {
@@ -112,8 +112,8 @@ async function generateAccessToken(
 }
 
 async function convertTokenToUserId(key: Promise<CryptoKey>, jwt: string) {
-  const { userId } = await verify(jwt, await key);
-  return userId as string;
+  const { sub: userId } = await verify(jwt, await key);
+  return userId;
 }
 
 async function refreshAccessToken(
