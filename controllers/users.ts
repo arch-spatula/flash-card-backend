@@ -25,12 +25,14 @@ async function signup({ request, response }: Context) {
       const passwordSalt = await genSalt(8);
       const passwordHash = await hash(input.password, passwordSalt);
 
-      response.status = 201;
-      response.body = await mongoAPI.postUser({
+      await mongoAPI.postUser({
         email: input.email,
         passwordHash,
         passwordSalt,
       });
+
+      response.status = 201;
+      response.body = null;
     }
   } catch (error) {
     response.status = 400;
