@@ -1,13 +1,9 @@
 import type { Context } from '../deps.ts';
 import MongoAPI from '../api/mongoAPI.ts';
-import Token, {
-  generateAccessToken,
-  generateRefreshToken,
-} from '../util/token.ts';
+import { generateAccessToken, generateRefreshToken } from '../util/token.ts';
 import { compare, genSalt, hash } from '../util/customBcrypt.ts';
 
 const mongoAPI = MongoAPI.getInstance();
-const token = Token.getInstance();
 
 async function signup({ request, response }: Context) {
   try {
