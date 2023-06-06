@@ -87,4 +87,20 @@ async function signin({ request, response, cookies }: Context) {
   }
 }
 
-export { signup, signin };
+async function signout({ cookies, response }: Context) {
+  try {
+    const expires = new Date();
+    cookies.set('user', null, { expires });
+    response.status = 204;
+    response.body = null;
+    console.log('logout');
+  } catch (error) {
+    response.status = 400;
+    response.body = {
+      success: false,
+      msg: `${error}`,
+    };
+  }
+}
+
+export { signup, signin, signout };
