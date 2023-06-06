@@ -37,14 +37,8 @@ https://flash-card-backend.deno.dev/
 - body: (없음)
 
 ```json
-{
-  "insertedId": "abc123"
-}
+// body 없음
 ```
-
-위 응답은 body 없음으로 수정될 예정입니다.
-
-<!-- TODO: 위 응답은 body 없음으로 수정될 예정입니다. -->
 
 #### Sign In
 
@@ -87,12 +81,12 @@ auth와 관련이 없은 요청을 보낼 때는 위 토큰을 header에 `Author
 - Method: `POST`
 - Headers:
   - Content-Type: `application/json`
-- Body: 없음
+- body: (없음)
 
 응답예시
 
 - status: `204`
-- Body: 없음
+- body: (없음)
 
 ```json
 // body 없음
@@ -154,7 +148,7 @@ Card 스키마
 
 - URL: `api/card`
 - Method: `GET`
-- Body: 없음
+- body: (없음)
 
 ```json
 // body 없음
@@ -236,7 +230,7 @@ Card 스키마
 
 - URL: `api/card/:id`
 - Method: `DELETE`
-- Body: 없음
+- body: (없음)
 
 ```json
 // body 없음
@@ -245,7 +239,7 @@ Card 스키마
 응답 예시
 
 - status: `204`
-- Body: 없음
+- body: (없음)
 
 ```json
 // body 없음
