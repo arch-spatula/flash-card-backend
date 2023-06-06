@@ -95,10 +95,8 @@ auth와 관련이 없은 요청을 보낼 때는 위 토큰을 header에 `Author
 - Body: 없음
 
 ```json
-
+// body 없음
 ```
-
-<!-- TODO: 로그아웃 기능을 구현필요 -->
 
 ### Card
 
