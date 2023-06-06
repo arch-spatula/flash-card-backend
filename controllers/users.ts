@@ -95,7 +95,6 @@ async function signout({ cookies, response }: Context) {
     cookies.set('user', null, { expires });
     response.status = 204;
     response.body = null;
-    console.log('logout');
   } catch (error) {
     response.status = 400;
     response.body = {
