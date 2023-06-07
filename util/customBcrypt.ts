@@ -1,11 +1,11 @@
 import {
-  hash as hashPromise,
+  hashPromise,
   hashSync,
-  compare as comparePromise,
+  comparePromise,
   compareSync,
-  genSalt as genSaltPromise,
+  genSaltPromise,
   genSaltSync,
-} from "https://deno.land/x/bcrypt@v0.4.1/mod.ts";
+} from '../deps.ts';
 
 /**
  * @see https://github.com/JamesBroadberry/deno-bcrypt/issues/26

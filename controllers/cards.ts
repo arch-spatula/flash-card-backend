@@ -1,27 +1,20 @@
-import { helpers } from "https://deno.land/x/oak@v12.4.0/mod.ts";
-import type { Context } from "https://deno.land/x/oak@v12.4.0/mod.ts";
-import MongoAPI from "../api/mongoAPI.ts";
-import Token from "../util/token.ts";
-import CardRecord from "../model/cards.ts";
+import { helpers } from '../deps.ts';
+import type { Context } from '../deps.ts';
+import MongoAPI from '../api/mongoAPI.ts';
+import CardRecord from '../model/cards.ts';
 
 const mongoAPI = MongoAPI.getInstance();
-const token = Token.getInstance();
 
-async function addCard({ request, response, cookies }: Context) {
+async function addCard({ request, response, state }: Context) {
   try {
-    if (!request.hasBody) throw Error("No Data");
+    if (!request.hasBody) throw Error('No Data');
 
-    const jwt = await cookies.get("user");
-    if (!jwt) {
-      throw Error("인증이 안 되어 있습니다.");
-    }
-    const userId = await token.tokenToUserId(jwt);
-    if (!userId) throw Error("사용자 id가 없습니다.");
+    const userId = state.userId ?? '';
 
     const { question, answer, submitDate, stackCount } = await request.body()
       .value;
     if (!question || !answer || !submitDate || !stackCount)
-      throw Error("question, answer, data, stackCount 중 값이 1개 없습니다.");
+      throw Error('question, answer, data, stackCount 중 값이 1개 없습니다.');
 
     const card = new CardRecord(
       question,
@@ -41,15 +34,9 @@ async function addCard({ request, response, cookies }: Context) {
   }
 }
 
-async function getCards({ response, cookies }: Context) {
+async function getCards({ response, state }: Context) {
   try {
-    const jwt = await cookies.get("user");
-    if (!jwt) {
-      throw Error("인증이 안 되어 있습니다.");
-    }
-
-    const userId = await token.tokenToUserId(jwt);
-    if (!userId) throw Error("사용자 id가 없습니다.");
+    const userId = state.userId ?? '';
 
     response.status = 200;
     response.body = await mongoAPI.getCards(userId);
@@ -63,23 +50,17 @@ async function getCards({ response, cookies }: Context) {
 }
 
 async function updateCard(ctx: Context) {
-  const { request, response, cookies } = ctx;
+  const { request, response, state } = ctx;
   const { id } = helpers.getQuery(ctx, { mergeParams: true });
   try {
-    if (!request.hasBody) throw Error("No Data");
+    if (!request.hasBody) throw Error('No Data');
 
-    const jwt = await cookies.get("user");
-    if (!jwt) {
-      throw Error("인증이 안 되어 있습니다.");
-    }
-
-    const userId = await token.tokenToUserId(jwt);
-    if (!userId) throw Error("사용자 id가 없습니다.");
+    const userId = state.userId ?? '';
 
     const { question, answer, submitDate, stackCount } = await request.body()
       .value;
     if (!question || !answer || !submitDate || !stackCount)
-      throw Error("question, answer, data, stackCount 중 값이 1개 없습니다.");
+      throw Error('question, answer, data, stackCount 중 값이 1개 없습니다.');
 
     const card = new CardRecord(
       question,
@@ -102,17 +83,9 @@ async function updateCard(ctx: Context) {
 }
 
 async function deleteCard(ctx: Context) {
-  const { response, cookies } = ctx;
+  const { response } = ctx;
   const { id } = helpers.getQuery(ctx, { mergeParams: true });
   try {
-    const jwt = await cookies.get("user");
-    if (!jwt) {
-      throw Error("인증이 안 되어 있습니다.");
-    }
-
-    const userId = await token.tokenToUserId(jwt);
-    if (!userId) throw Error("사용자 id가 없습니다.");
-
     response.status = 204;
     await mongoAPI.deleteCards(id);
     response.body = null;
