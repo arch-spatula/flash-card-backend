@@ -161,6 +161,7 @@ Card 스키마
 - Method: `POST`
 - Headers:
   - Content-Type: `application/json`
+  - Authorization: `Bearer (access_token)`
 - Body:
   - question: `string`
   - answer: `string`
@@ -194,7 +195,10 @@ Card 스키마
 
 - URL: `api/card`
 - Method: `GET`
-- body: (없음)
+- Headers:
+  - Content-Type: `application/json`
+  - Authorization: `Bearer (access_token)`
+- Body: (없음)
 
 ```json
 // body 없음
@@ -241,6 +245,7 @@ Card 스키마
 - Method: `PATCH`
 - Headers:
   - Content-Type: `application/json`
+  - Authorization: `Bearer (access_token)`
 - Body:
   - question: `string`
   - answer: `string`
@@ -276,6 +281,9 @@ Card 스키마
 
 - URL: `api/card/:id`
 - Method: `DELETE`
+- Headers:
+  - Content-Type: `application/json`
+  - Authorization: `Bearer (access_token)`
 - Body: (없음)
 
 ```json
