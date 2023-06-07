@@ -89,7 +89,7 @@ auth와 관련이 없은 요청을 보낼 때는 위 토큰을 header에 `Author
 
 응답예시
 
-- status: `204`
+- Status: `204`
 - Body: (없음)
 
 ```json
@@ -112,8 +112,8 @@ access token이 만료되어 있고 refresh token이 유효하고 auth이외 요
 
 응답 예시
 
-- status: `401`
-- body:
+- Status: `401`
+- Body:
   - success: `boolean`
   - mag: `'new token is required'`
   - access_token: `string`
@@ -274,7 +274,7 @@ Card 스키마
 
 응답 예시
 
-- status: `204`
+- Status: `204`
 - Body: (없음)
 
 ```json
