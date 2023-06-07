@@ -1,6 +1,16 @@
 # flash card backend
 
-플래시카드 백엔드를 다루는 레포지토리입니다.
+[플래시카드 서비스](https://flash-card-frontend-pi.vercel.app/)의 백엔드 레포지토리입니다.
+
+폴리 레포 프로젝트이고 [프론트엔드 레포지토리](https://github.com/arch-spatula/flash-card-frontend)는 따로 구성했습니다.
+
+## 기술 스택
+
+- runtime: Deno
+- Deploy: Deno Deploy
+- Database: mongoDB Atlas
+
+<!-- TODO: ## DB 스키마 -->
 
 ## API 명세
 
