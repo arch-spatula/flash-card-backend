@@ -2,6 +2,14 @@
 
 플래시카드 백엔드를 다루는 레포지토리입니다.
 
+## 기술 스택
+
+- runtime: Deno
+- Deploy: Deno Deploy
+- Database: mongoDB Atlas
+
+<!-- TODO: ## DB 스키마 -->
+
 ## API 명세
 
 아래는 API 주소입니다.
