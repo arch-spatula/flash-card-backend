@@ -12,7 +12,7 @@ https://flash-card-backend.deno.dev/
 
 ### Auth
 
-#### SignUp
+#### Sign Up
 
 요청
 
@@ -24,13 +24,23 @@ https://flash-card-backend.deno.dev/
   - email: `string`
   - password: `string`
 
+```json
+{
+  "email": "username@email.com",
+  "password": "12345678"
+}
+```
+
 응답 예시
 
-- status: `201`
-- body:
-  - insertedId: 123abc
+- Status: `201`
+- Body: (없음)
 
-#### SignIn
+```json
+// body 없음
+```
+
+#### Sign In
 
 요청
 
@@ -42,13 +52,81 @@ https://flash-card-backend.deno.dev/
   - email: `string`
   - password: `string`
 
+```json
+{
+  "email": "username@email.com",
+  "password": "12345678"
+}
+```
+
 응답 예시
 
-- status: `201`
-- body:
-  - email: `email`
+- Status: `201`
+- Body:
+  - access_token: `access_token`
 
-<!-- TODO: access_token으로 변환하기 -->
+```json
+{
+  "access_token": "qwer1234"
+}
+```
+
+auth와 관련이 없은 요청을 보낼 때는 위 토큰을 header에 `Authorization: Bearer (access_token)` 형식으로 설정하고 요청을 보내주세요.
+
+#### Sign Out
+
+요청예시
+
+- URL: `api/auth/signout`
+- Method: `POST`
+- Headers:
+  - Content-Type: `application/json`
+- Body: (없음)
+
+```json
+// body 없음
+```
+
+응답예시
+
+- Status: `204`
+- Body: (없음)
+
+```json
+// body 없음
+```
+
+#### refresh
+
+access token이 만료되어 있고 refresh token이 유효하고 auth이외 요청을 보내면 갱신 token으로 응답합니다.
+
+- URL: `api/(auth 이외 모든 리소스)`
+- Method: `ALL`
+- Headers:
+  - Content-Type: `application/json`
+  - Authorization: `Bearer (만료된 access_token)`
+
+```json
+// body의 필요성은 접근하는 리소스마다 다릅니다.
+```
+
+응답 예시
+
+- Status: `401`
+- Body:
+  - success: `boolean`
+  - mag: `'new token is required'`
+  - access_token: `string`
+
+```json
+{
+  "success": false,
+  "mag": "new token is required",
+  "access_token": "zxvc6789"
+}
+```
+
+응답받은 token을 갱신에 사용해야 합니다.
 
 ### Card
 
@@ -73,16 +151,25 @@ Card 스키마
 - Method: `POST`
 - Headers:
   - Content-Type: `application/json`
-- body:
+- Body:
   - question: `string`
   - answer: `string`
   - submitDate: `Date`
   - stackCount: `number`
 
+```json
+{
+  "question": "CPU의 본딧말",
+  "answer": "Central Processing Unit",
+  "submitDate": "Wed May 17 2023 21:11:26 GMT+0900 (한국 표준시)",
+  "stackCount": "0"
+}
+```
+
 응답 예시
 
-- status: `201`
-- body:
+- Status: `201`
+- Body:
   - insertedId: `string`
 
 ```json
@@ -97,11 +184,16 @@ Card 스키마
 
 - URL: `api/card`
 - Method: `GET`
+- body: (없음)
+
+```json
+// body 없음
+```
 
 응답 예시
 
-- status: `200`
-- body:
+- Status: `200`
+- Body:
   - documents:
     - question: `string`
     - answer: `string`
@@ -139,16 +231,25 @@ Card 스키마
 - Method: `PATCH`
 - Headers:
   - Content-Type: `application/json`
-- body:
+- Body:
   - question: `string`
   - answer: `string`
   - submitDate: `Date`
   - stackCount: `number`
 
+```json
+{
+  "question": "CPU의 본딧말",
+  "answer": "Central Processing Unit",
+  "submitDate": "Wed May 19 2023 21:11:26 GMT+0900 (한국 표준시)",
+  "stackCount": "1"
+}
+```
+
 응답 예시
 
-- status: `200`
-- body:
+- Status: `200`
+- Body:
   - matchedCount: `number`
   - modifiedCount: `number`
 
@@ -165,11 +266,20 @@ Card 스키마
 
 - URL: `api/card/:id`
 - Method: `DELETE`
+- Body: (없음)
+
+```json
+// body 없음
+```
 
 응답 예시
 
-- status: `204`
-- body: (없음)
+- Status: `204`
+- Body: (없음)
+
+```json
+// body 없음
+```
 
 ## 실행 명령
 
