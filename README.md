@@ -107,7 +107,7 @@ access token이 만료되어 있고 refresh token이 유효하고 auth이외 요
   - Authorization: `Bearer (만료된 access_token)`
 
 ```json
-// 생략
+// body의 필요성은 접근하는 리소스마다 다릅니다.
 ```
 
 응답 예시
