@@ -12,17 +12,15 @@ const authMiddleware: Middleware = async (
   next
 ) => {
   try {
-    const refreshToken = request.headers.get('Authorization');
-    const accessToken = await cookies.get('user');
-    if (!refreshToken || !refreshToken.startsWith('Bearer ') || !accessToken)
+    const accessToken = request.headers.get('Authorization');
+    const refreshToken = await cookies.get('user');
+    if (!accessToken || !accessToken.startsWith('Bearer ') || !refreshToken)
       throw new BadRequestError('Bad Request');
 
-    const userId = await convertTokenToUserId(accessToken);
+    const userId = await convertTokenToUserId(accessToken.split(' ')[1]);
     if (!userId) {
       const isNotExpired = await convertTokenToUserId(refreshToken);
-      if (!isNotExpired) {
-        throw new AuthorizationError('Unauthorized');
-      }
+      if (!isNotExpired) throw new AuthorizationError('Unauthorized');
 
       const { accessToken } = await refreshAccessToken(refreshToken);
       response.status = 401;

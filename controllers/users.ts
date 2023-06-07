@@ -1,13 +1,9 @@
 import type { Context } from '../deps.ts';
 import MongoAPI from '../api/mongoAPI.ts';
-import Token, {
-  generateAccessToken,
-  generateRefreshToken,
-} from '../util/token.ts';
+import { generateAccessToken, generateRefreshToken } from '../util/token.ts';
 import { compare, genSalt, hash } from '../util/customBcrypt.ts';
 
 const mongoAPI = MongoAPI.getInstance();
-const token = Token.getInstance();
 
 async function signup({ request, response }: Context) {
   try {
@@ -29,12 +25,14 @@ async function signup({ request, response }: Context) {
       const passwordSalt = await genSalt(8);
       const passwordHash = await hash(input.password, passwordSalt);
 
-      response.status = 201;
-      response.body = await mongoAPI.postUser({
+      await mongoAPI.postUser({
         email: input.email,
         passwordHash,
         passwordSalt,
       });
+
+      response.status = 201;
+      response.body = null;
     }
   } catch (error) {
     response.status = 400;
@@ -91,4 +89,19 @@ async function signin({ request, response, cookies }: Context) {
   }
 }
 
-export { signup, signin };
+async function signout({ cookies, response }: Context) {
+  try {
+    const expires = new Date();
+    cookies.set('user', null, { expires });
+    response.status = 204;
+    response.body = null;
+  } catch (error) {
+    response.status = 400;
+    response.body = {
+      success: false,
+      msg: `${error}`,
+    };
+  }
+}
+
+export { signup, signin, signout };
