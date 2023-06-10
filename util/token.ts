@@ -89,7 +89,7 @@ async function generateRefreshToken(
   const jwt = await create(
     { alg: 'HS512' },
     { exp: getNumericDate(expiresInSec), sub: userId },
-    await key
+    key
   );
   return {
     jwt,
@@ -105,7 +105,7 @@ async function generateAccessToken(
   const jwt = await create(
     { alg: 'HS512' },
     { exp: getNumericDate(expiresInSec), sub: userId },
-    await key
+    key
   );
   return {
     jwt,
@@ -117,7 +117,7 @@ async function generateAccessToken(
  * sub는 라이브러리에서 문자열을 할당하도록 예약되어 있습니다.
  */
 async function convertTokenToUserId(jwt: string, key = privateKey) {
-  const { sub: userId } = await verify(jwt, await key);
+  const { sub: userId } = await verify(jwt, key);
   return userId;
 }
 
