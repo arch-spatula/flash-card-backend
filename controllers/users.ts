@@ -62,14 +62,14 @@ async function signIn({ request, response }: Context) {
     if (document === null) throw Error('이메일이 없습니다.');
     else {
       if (await compare(input.password, document.passwordHash)) {
-        const { jwt: refreshToken } = await generateRefreshToken(document._id);
+        const { jwt: refresh_token } = await generateRefreshToken(document._id);
         const { jwt: access_token } = await generateAccessToken(document._id);
 
         response.status = 201;
         response.body = {
           success: true,
           access_token,
-          refreshToken,
+          refresh_token,
         };
       } else {
         throw Error('비밀번호가 일치하지 않습니다.');
