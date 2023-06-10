@@ -71,6 +71,7 @@ async function signin({ request, response, cookies }: Context) {
         response.body = {
           success: true,
           access_token,
+          refreshToken,
         };
       } else {
         throw Error('비밀번호가 일치하지 않습니다.');
