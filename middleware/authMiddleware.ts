@@ -6,31 +6,19 @@ class AuthorizationError extends Error {}
 
 /**
  * @see https://github.com/gitdagray/mern_stack_course/blob/main/lesson_13-backend/middleware/verifyJWT.js
+ * @todo refresh token 생성 요청 endpoint 추가
  */
 const authMiddleware: Middleware = async (
-  { request, response, cookies, state },
+  { request, response, state },
   next
 ) => {
   try {
     const accessToken = request.headers.get('Authorization');
-    const refreshToken = await cookies.get('user');
-    if (!accessToken || !accessToken.startsWith('Bearer ') || !refreshToken)
+    if (!accessToken || !accessToken.startsWith('Bearer '))
       throw new BadRequestError('Bad Request');
 
     const userId = await convertTokenToUserId(accessToken.split(' ')[1]);
-    if (!userId) {
-      const isNotExpired = await convertTokenToUserId(refreshToken);
-      if (!isNotExpired) throw new AuthorizationError('Unauthorized');
-
-      const { accessToken } = await refreshAccessToken(refreshToken);
-      response.status = 401;
-      response.body = {
-        success: false,
-        mag: 'new token is required',
-        access_token: accessToken,
-      };
-      return;
-    }
+    if (!userId) throw new AuthorizationError('expired');
 
     state.userId = userId;
     await next();

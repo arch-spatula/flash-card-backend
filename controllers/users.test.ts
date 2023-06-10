@@ -1,8 +1,7 @@
 import { Context, hashPromise } from '../deps.ts';
 import { assertEquals } from '../deps.ts';
 import MongoAPI from '../api/mongoAPI.ts';
-import Token from '../util/token.ts';
-import { signin, signup } from './users.ts';
+import { signIn, signUp } from './users.ts';
 
 // 테스트용 가짜 데이터
 const mockUser = {
@@ -66,7 +65,7 @@ const mockContext: Context = {
 
 Deno.test('signup 테스트', async () => {
   // 테스트용 mockMongoAPI와 mockToken 객체를 사용하여 signup 함수 테스트
-  await signup(mockContext);
+  await signUp(mockContext);
 
   assertEquals(mockContext.response.status, 201);
   assertEquals(mockContext.response.body, mockUserDocument);
@@ -77,7 +76,7 @@ Deno.test('signin 테스트', async () => {
   mockUserDocument.passwordHash = await hashPromise(mockUser.password, '8');
 
   // 테스트용 mockMongoAPI와 mockToken 객체를 사용하여 signin 함수 테스트
-  await signin(mockContext);
+  await signIn(mockContext);
 
   assertEquals(mockContext.response.status, 201);
   assertEquals(mockContext.response.body, mockUserDocument);
@@ -91,7 +90,7 @@ Deno.test('signup 에러 테스트 - 이미 가입한 아이디', async () => {
   };
 
   // 테스트용 mockMongoAPIWithError와 mockToken 객체를 사용하여 signup 함수 테스트
-  await signup(mockContext);
+  await signUp(mockContext);
 
   assertEquals(mockContext.response.status, 400);
   assertEquals(mockContext.response.body, {
@@ -108,7 +107,7 @@ Deno.test('signin 에러 테스트 - 이메일 없음', async () => {
   };
 
   // 테스트용 mockMongoAPIWithError와 mockToken 객체를 사용하여 signin 함수 테스트
-  await signin(mockContext);
+  await signIn(mockContext);
 
   assertEquals(mockContext.response.status, 400);
   assertEquals(mockContext.response.body, {
@@ -126,7 +125,7 @@ Deno.test('signin 에러 테스트 - 비밀번호 불일치', async () => {
   };
 
   // 테스트용 mockMongoAPI와 mockAuthWithError 객체를 사용하여 signin 함수 테스트
-  await signin(mockContext);
+  await signIn(mockContext);
 
   assertEquals(mockContext.response.status, 400);
   assertEquals(mockContext.response.body, {

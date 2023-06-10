@@ -1,11 +1,15 @@
 import type { Context } from '../deps.ts';
 import MongoAPI from '../api/mongoAPI.ts';
-import { generateAccessToken, generateRefreshToken } from '../util/token.ts';
+import {
+  generateAccessToken,
+  generateRefreshToken,
+  refreshAccessToken,
+} from '../util/token.ts';
 import { compare, genSalt, hash } from '../util/customBcrypt.ts';
 
 const mongoAPI = MongoAPI.getInstance();
 
-async function signup({ request, response }: Context) {
+async function signUp({ request, response }: Context) {
   try {
     if (!request.hasBody) {
       throw Error('body가 없습니다.');
@@ -43,7 +47,7 @@ async function signup({ request, response }: Context) {
   }
 }
 
-async function signin({ request, response, cookies }: Context) {
+async function signIn({ request, response }: Context) {
   try {
     if (!request.hasBody) {
       throw Error('body가 없습니다.');
@@ -58,23 +62,14 @@ async function signin({ request, response, cookies }: Context) {
     if (document === null) throw Error('이메일이 없습니다.');
     else {
       if (await compare(input.password, document.passwordHash)) {
-        const { jwt: refreshToken, expires: refreshExpires } =
-          await generateRefreshToken(document._id);
+        const { jwt: refresh_token } = await generateRefreshToken(document._id);
+        const { jwt: access_token } = await generateAccessToken(document._id);
 
-        const { jwt: access_token } = await generateAccessToken(
-          document._id,
-          60 * 60
-        );
-
-        cookies.set('user', refreshToken, {
-          expires: refreshExpires,
-          httpOnly: true,
-          // secure: true, 암호화 방식 찾고 주석을 풀어주세요
-        });
         response.status = 201;
         response.body = {
           success: true,
           access_token,
+          refresh_token,
         };
       } else {
         throw Error('비밀번호가 일치하지 않습니다.');
@@ -89,12 +84,22 @@ async function signin({ request, response, cookies }: Context) {
   }
 }
 
-async function signout({ cookies, response }: Context) {
+async function refreshUserAccessToken({ request, response }: Context) {
   try {
-    const expires = new Date();
-    cookies.set('user', null, { expires });
-    response.status = 204;
-    response.body = null;
+    const refreshToken = request.headers.get('Authorization');
+    if (!refreshToken || !refreshToken.startsWith('Bearer '))
+      throw new Error('Bad Request');
+
+    const { accessToken, success } = await refreshAccessToken(
+      refreshToken.split(' ')[1]
+    );
+    if (!accessToken || !success) throw new Error('expired');
+
+    response.status = 200;
+    response.body = {
+      success: true,
+      access_token: accessToken,
+    };
   } catch (error) {
     response.status = 400;
     response.body = {
@@ -104,4 +109,4 @@ async function signout({ cookies, response }: Context) {
   }
 }
 
-export { signup, signin, signout };
+export { signUp, signIn, refreshUserAccessToken };
