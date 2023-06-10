@@ -4,7 +4,8 @@ import { generateAccessToken, generateRefreshToken } from '../util/token.ts';
 import { compare, genSalt, hash } from '../util/customBcrypt.ts';
 
 const mongoAPI = MongoAPI.getInstance();
-async function signup({ request, response }: Context) {
+
+async function signUp({ request, response }: Context) {
   try {
     if (!request.hasBody) {
       throw Error('body가 없습니다.');
@@ -42,7 +43,7 @@ async function signup({ request, response }: Context) {
   }
 }
 
-async function signin({ request, response, cookies }: Context) {
+async function signIn({ request, response, cookies }: Context) {
   try {
     if (!request.hasBody) {
       throw Error('body가 없습니다.');
@@ -79,7 +80,7 @@ async function signin({ request, response, cookies }: Context) {
   }
 }
 
-async function signout({ cookies, response }: Context) {
+function signOut({ cookies, response }: Context) {
   try {
     const expires = new Date();
     cookies.set('user', null, { expires });
@@ -94,4 +95,4 @@ async function signout({ cookies, response }: Context) {
   }
 }
 
-export { signup, signin, signout };
+export { signUp, signIn, signOut };
