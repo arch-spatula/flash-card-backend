@@ -43,7 +43,7 @@ async function signUp({ request, response }: Context) {
   }
 }
 
-async function signIn({ request, response, cookies }: Context) {
+async function signIn({ request, response }: Context) {
   try {
     if (!request.hasBody) {
       throw Error('body가 없습니다.');
@@ -80,19 +80,4 @@ async function signIn({ request, response, cookies }: Context) {
   }
 }
 
-function signOut({ cookies, response }: Context) {
-  try {
-    const expires = new Date();
-    cookies.set('user', null, { expires });
-    response.status = 204;
-    response.body = null;
-  } catch (error) {
-    response.status = 400;
-    response.body = {
-      success: false,
-      msg: `${error}`,
-    };
-  }
-}
-
-export { signUp, signIn, signOut };
+export { signUp, signIn };

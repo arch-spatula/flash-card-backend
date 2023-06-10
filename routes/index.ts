@@ -5,7 +5,7 @@ import {
   getCards,
   updateCard,
 } from '../controllers/cards.ts';
-import { signIn, signOut, signUp } from '../controllers/users.ts';
+import { signIn, signUp } from '../controllers/users.ts';
 import { authMiddleware } from '../middleware/authMiddleware.ts';
 
 const router = new Router();
@@ -16,7 +16,6 @@ router
   .patch('/api/card/:id', authMiddleware, updateCard)
   .delete('/api/card/:id', authMiddleware, deleteCard)
   .post('/api/auth/signup', signUp)
-  .post('/api/auth/signin', signIn)
-  .post('/api/auth/signout', signOut);
+  .post('/api/auth/signin', signIn);
 
 export default router;
