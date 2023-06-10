@@ -60,9 +60,7 @@ async function refreshAccessToken(refreshToken: string, key = privateKey) {
   try {
     const userId = await convertTokenToUserId(refreshToken, key);
 
-    if (!userId) {
-      throw new TokenError('토큰이 만료되었습니다.');
-    }
+    if (!userId) throw new TokenError('토큰이 만료되었습니다.');
 
     const { jwt: accessToken } = await generateAccessToken(userId);
     return { accessToken, success: true };
