@@ -57,16 +57,9 @@ async function signin({ request, response, cookies }: Context) {
     if (document === null) throw Error('이메일이 없습니다.');
     else {
       if (await compare(input.password, document.passwordHash)) {
-        const { jwt: refreshToken, expires: refreshExpires } =
-          await generateRefreshToken(document._id);
-
+        const { jwt: refreshToken } = await generateRefreshToken(document._id);
         const { jwt: access_token } = await generateAccessToken(document._id);
 
-        cookies.set('user', refreshToken, {
-          expires: refreshExpires,
-          httpOnly: true,
-          // secure: true, 암호화 방식 찾고 주석을 풀어주세요
-        });
         response.status = 201;
         response.body = {
           success: true,
