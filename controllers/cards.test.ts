@@ -3,7 +3,6 @@ import { beforeEach } from '../deps.ts';
 import { addCard, deleteCard, getCards, updateCard } from './cards.ts';
 import type { Context } from '../deps.ts';
 import MongoAPI from '../api/mongoAPI.ts';
-import Token from '../util/token.ts';
 import CardRecord from '../model/cards.ts';
 // 테스트 코드를 작성할 때 필요한 모듈을 가져옵니다.
 // Mocking

@@ -13,7 +13,7 @@ import {
 } from './token.ts';
 
 Deno.test('should return access token', async () => {
-  const privateKey = generateKey();
+  const privateKey = await generateKey();
   const userId = 'user123';
   const expiresInSec = 3600;
 
@@ -24,7 +24,7 @@ Deno.test('should return access token', async () => {
 });
 
 Deno.test('should return refresh token', async () => {
-  const privetKey = generateKey();
+  const privetKey = await generateKey();
   const userId = 'user123';
   const expiresInSec = 3600;
 
@@ -35,7 +35,7 @@ Deno.test('should return refresh token', async () => {
 });
 
 Deno.test('should refresh access token', async () => {
-  const privetKey = generateKey();
+  const privetKey = await generateKey();
   const userId = 'userId123';
   const expiresInSec = 3600;
   const refreshToken = (
@@ -49,7 +49,7 @@ Deno.test('should refresh access token', async () => {
 });
 
 Deno.test('should convert token as userId', async () => {
-  const privateKey = generateKey();
+  const privateKey = await generateKey();
   const userId = 'userId123';
   const expiresInSec = 3600;
   const accessToken = (
@@ -63,7 +63,7 @@ Deno.test('should convert token as userId', async () => {
 });
 
 Deno.test('should throw error for invalid token', async () => {
-  const privateKey = generateKey();
+  const privateKey = await generateKey();
   const invalidToken = 'invalid-token';
 
   await assertRejects(
@@ -77,7 +77,7 @@ Deno.test('should throw error for invalid token', async () => {
 });
 
 Deno.test('should throw error for expired token', async () => {
-  const privateKey = generateKey();
+  const privateKey = await generateKey();
   const userId = 'userId123';
   const expiresInSec = -10;
   const expiredToken = (
