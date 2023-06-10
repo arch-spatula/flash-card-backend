@@ -1,6 +1,10 @@
 import type { Context } from '../deps.ts';
 import MongoAPI from '../api/mongoAPI.ts';
-import { generateAccessToken, generateRefreshToken } from '../util/token.ts';
+import {
+  generateAccessToken,
+  generateRefreshToken,
+  refreshAccessToken,
+} from '../util/token.ts';
 import { compare, genSalt, hash } from '../util/customBcrypt.ts';
 
 const mongoAPI = MongoAPI.getInstance();
@@ -80,4 +84,29 @@ async function signIn({ request, response }: Context) {
   }
 }
 
-export { signUp, signIn };
+async function refreshUserAccessToken({ request, response }: Context) {
+  try {
+    const refreshToken = request.headers.get('Authorization');
+    if (!refreshToken || !refreshToken.startsWith('Bearer '))
+      throw new Error('Bad Request');
+
+    const { accessToken, success } = await refreshAccessToken(
+      refreshToken.split(' ')[1]
+    );
+    if (!accessToken || !success) throw new Error('expired');
+
+    response.status = 200;
+    response.body = {
+      success: true,
+      access_token: accessToken,
+    };
+  } catch (error) {
+    response.status = 400;
+    response.body = {
+      success: false,
+      msg: `${error}`,
+    };
+  }
+}
+
+export { signUp, signIn, refreshUserAccessToken };
