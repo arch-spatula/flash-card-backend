@@ -4,7 +4,6 @@ import { generateAccessToken, generateRefreshToken } from '../util/token.ts';
 import { compare, genSalt, hash } from '../util/customBcrypt.ts';
 
 const mongoAPI = MongoAPI.getInstance();
-
 async function signup({ request, response }: Context) {
   try {
     if (!request.hasBody) {
@@ -61,10 +60,7 @@ async function signin({ request, response, cookies }: Context) {
         const { jwt: refreshToken, expires: refreshExpires } =
           await generateRefreshToken(document._id);
 
-        const { jwt: access_token } = await generateAccessToken(
-          document._id,
-          60 * 60
-        );
+        const { jwt: access_token } = await generateAccessToken(document._id);
 
         cookies.set('user', refreshToken, {
           expires: refreshExpires,
