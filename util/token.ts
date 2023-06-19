@@ -34,7 +34,7 @@ async function generateRefreshToken(
 
 async function generateAccessToken(
   userId: string,
-  expiresInSec = 30,
+  expiresInSec = 3600,
   key = privateKey
 ) {
   const jwt = await create(
