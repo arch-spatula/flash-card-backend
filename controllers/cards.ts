@@ -14,7 +14,9 @@ async function addCard({ request, response, state }: Context) {
     const { question, answer, submitDate, stackCount } = await request.body()
       .value;
     if (!question || !answer || !submitDate || !stackCount)
-      throw Error('question, answer, data, stackCount 중 값이 1개 없습니다.');
+      throw Error(
+        'question, answer, submitDate, stackCount 중 값이 1개 없습니다.'
+      );
 
     const card = new CardRecord(
       question,
