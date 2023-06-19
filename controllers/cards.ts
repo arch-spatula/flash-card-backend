@@ -13,7 +13,8 @@ async function addCard({ request, response, state }: Context) {
 
     const { question, answer, submitDate, stackCount } = await request.body()
       .value;
-    if (!question || !answer || !submitDate || !stackCount)
+    if (!question || !answer || !submitDate || stackCount === undefined)
+      // stackCount의 0은 falsy 하기 때문에 undefined으로 활용
       throw Error(
         'question, answer, submitDate, stackCount 중 값이 1개 없습니다.'
       );
