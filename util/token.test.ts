@@ -66,14 +66,7 @@ Deno.test('should throw error for invalid token', async () => {
   const privateKey = await generateKey();
   const invalidToken = 'invalid-token';
 
-  await assertRejects(
-    async () => {
-      return await convertTokenToUserId(invalidToken, privateKey);
-    },
-    Error,
-    'The serialization of the jwt is invalid.',
-    'throw different error'
-  );
+  assertEquals(await convertTokenToUserId(invalidToken, privateKey), null);
 });
 
 Deno.test('should throw error for expired token', async () => {
@@ -84,12 +77,5 @@ Deno.test('should throw error for expired token', async () => {
     await generateAccessToken(userId, expiresInSec, privateKey)
   ).jwt;
 
-  await assertRejects(
-    async () => {
-      return await convertTokenToUserId(expiredToken, privateKey);
-    },
-    Error,
-    'The jwt is expired.',
-    'throw different error'
-  );
+  assertEquals(await convertTokenToUserId(expiredToken, privateKey), null);
 });

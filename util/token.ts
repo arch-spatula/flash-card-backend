@@ -67,7 +67,7 @@ async function convertTokenToUserId(jwt: string, key = privateKey) {
     const { sub: userId } = await verify(jwt, key);
     return userId;
   } catch (_error) {
-    //
+    return null;
   }
 }
 
