@@ -1,4 +1,4 @@
-import { create, getNumericDate, verify } from '../deps.ts';
+import { create, getNumericDate, verify, config } from '../deps.ts';
 
 class TokenError extends Error {}
 
@@ -6,7 +6,7 @@ class TokenError extends Error {}
  * @see https://deno.land/x/djwt@v2.8
  */
 
-async function generateKey(): Promise<CryptoKey> {
+async function generateKey() {
   return await crypto.subtle.generateKey(
     { name: 'HMAC', hash: { name: 'SHA-512' } },
     true,
@@ -14,7 +14,17 @@ async function generateKey(): Promise<CryptoKey> {
   );
 }
 
-const privateKey = await generateKey();
+const PUBLIC_KEY = JSON.parse(
+  Deno.env.get('PUBLIC_KEY') || config()['PUBLIC_KEY']
+);
+
+const privateKey = await crypto.subtle.importKey(
+  'jwk',
+  PUBLIC_KEY,
+  { name: 'HMAC', hash: { name: 'SHA-512' } },
+  true,
+  ['sign', 'verify']
+);
 
 async function generateRefreshToken(
   userId: string,
@@ -26,6 +36,7 @@ async function generateRefreshToken(
     { exp: getNumericDate(expiresInSec), sub: userId },
     key
   );
+
   return {
     jwt,
     expires: new Date(new Date().getTime() + expiresInSec * 1000),
