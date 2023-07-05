@@ -26,6 +26,7 @@ async function generateRefreshToken(
     { exp: getNumericDate(expiresInSec), sub: userId },
     key
   );
+
   return {
     jwt,
     expires: new Date(new Date().getTime() + expiresInSec * 1000),
@@ -34,7 +35,8 @@ async function generateRefreshToken(
 
 async function generateAccessToken(
   userId: string,
-  expiresInSec = 3600,
+  // expiresInSec = 3600,
+  expiresInSec = 10,
   key = privateKey
 ) {
   const jwt = await create(
@@ -52,8 +54,12 @@ async function generateAccessToken(
  * sub는 라이브러리에서 문자열을 할당하도록 예약되어 있습니다.
  */
 async function convertTokenToUserId(jwt: string, key = privateKey) {
-  const { sub: userId } = await verify(jwt, key);
-  return userId;
+  try {
+    const { sub: userId } = await verify(jwt, key);
+    return userId;
+  } catch (_error) {
+    //
+  }
 }
 
 async function refreshAccessToken(refreshToken: string, key = privateKey) {
