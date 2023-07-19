@@ -13,20 +13,21 @@ export {
   genSaltSync,
 } from 'https://deno.land/x/bcrypt@v0.4.1/mod.ts';
 
-export { Router, testing } from 'https://deno.land/x/oak@v12.4.0/mod.ts';
-
 export { config } from 'https://deno.land/x/dotenv@v3.2.2/mod.ts';
 
 export { oakCors } from 'https://deno.land/x/cors@v1.2.2/mod.ts';
-
-export { Application } from 'https://deno.land/x/oak@v12.4.0/mod.ts';
 
 export type {
   Context,
   Middleware,
 } from 'https://deno.land/x/oak@v12.4.0/mod.ts';
 
-export { helpers } from 'https://deno.land/x/oak@v12.4.0/mod.ts';
+export {
+  helpers,
+  Application,
+  Router,
+  testing,
+} from 'https://deno.land/x/oak@v12.4.0/mod.ts';
 
 export {
   beforeEach,
