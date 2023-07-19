@@ -1,15 +1,38 @@
 import { config } from '../deps.ts';
-import CardRecord from '../model/cards.ts';
+import type { CardRecord } from '../model/cards.ts';
+import Card from '../model/cards.ts';
 import mongoose from 'npm:mongoose@^7.4.0';
 
 const MONGO_URI = Deno.env.get('MONGO_URI') || config()['MONGO_URI'];
 const CARD_API_KEY = Deno.env.get('CARD_API_KEY') || config()['CARD_API_KEY'];
 const MONGO_URL = Deno.env.get('MONGO_URL') || config()['MONGO_URL'];
 
-mongoose.connect(MONGO_URL).then((e) => {
-  // console.log('연결성공', e);
-  return e;
+await mongoose.connect(MONGO_URL);
+
+mongoose.connection.useDb('cards_db');
+
+console.log(mongoose.connection.readyState);
+
+const card = new Card({
+  userId: '1234',
+  question: 'asdf',
+  answer: 'asdf',
+  submitDate: Date.now(),
+  stackCount: 9999,
 });
+
+// const foo = await card.save();
+
+// console.log(foo);
+
+// const cardFromMongoDb = await card.collection.findOne({
+//   userId: '1234',
+// });
+
+const foo = await Card.findOne({ userId: '1234' });
+console.log(foo);
+
+// console.log(cardFromMongoDb);
 
 type Collection = {
   dataSource: string;

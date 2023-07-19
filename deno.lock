@@ -230,7 +230,8 @@
   "npm": {
     "specifiers": {
       "mongoose": "mongoose@7.4.0",
-      "mongoose@7.4.0": "mongoose@7.4.0"
+      "mongoose@7.4.0": "mongoose@7.4.0",
+      "mongoose@^7.4.0": "mongoose@7.4.0"
     },
     "packages": {
       "@types/node@18.15.0": {

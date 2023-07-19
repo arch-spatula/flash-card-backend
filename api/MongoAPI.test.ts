@@ -1,4 +1,4 @@
-import CardRecord from '../model/cards.ts';
+import { CardRecord } from '../model/cards.ts';
 import MongoAPI from './mongoAPI.ts';
 import { assert, assertEquals, beforeEach } from '../deps.ts';
 
