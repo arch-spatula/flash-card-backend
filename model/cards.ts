@@ -1,18 +1,15 @@
 import { model, Schema } from 'npm:mongoose@^7.4.0';
 
-const cardSchema = new Schema<{
-  question: string;
-  answer: string;
-  submitDate: Date;
-  stackCount: number;
-  userId: string;
-}>({
-  question: { type: String, required: true },
-  answer: { type: String, required: true },
-  submitDate: { type: Date, required: true },
-  stackCount: { type: Number, required: true },
-  userId: { type: String, required: true },
-});
+const cardSchema = new Schema<Card>(
+  {
+    question: { type: String, required: true },
+    answer: { type: String, required: true },
+    submitDate: { type: Date, required: true },
+    stackCount: { type: Number, required: true },
+    userId: { type: String, required: true },
+  },
+  { versionKey: false }
+);
 
 export default model('Card', cardSchema, 'cards');
 

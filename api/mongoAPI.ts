@@ -1,38 +1,115 @@
+import { updateCard } from '../controllers/cards.ts';
 import { config } from '../deps.ts';
 import type { CardRecord } from '../model/cards.ts';
 import Card from '../model/cards.ts';
+import User from '../model/user.ts';
 import mongoose from 'npm:mongoose@^7.4.0';
 
-const MONGO_URI = Deno.env.get('MONGO_URI') || config()['MONGO_URI'];
-const CARD_API_KEY = Deno.env.get('CARD_API_KEY') || config()['CARD_API_KEY'];
 const MONGO_URL = Deno.env.get('MONGO_URL') || config()['MONGO_URL'];
 
 await mongoose.connect(MONGO_URL);
 
-mongoose.connection.useDb('cards_db');
+console.log(mongoose.connection.name);
 
-console.log(mongoose.connection.readyState);
-
-const card = new Card({
-  userId: '1234',
-  question: 'asdf',
-  answer: 'asdf',
-  submitDate: Date.now(),
-  stackCount: 9999,
-});
-
-// const foo = await card.save();
-
-// console.log(foo);
-
-// const cardFromMongoDb = await card.collection.findOne({
+// const card = new Card({
 //   userId: '1234',
+//   question: 'asdf',
+//   answer: 'asdf',
+//   submitDate: Date.now(),
+//   stackCount: 9999,
 // });
 
-const foo = await Card.findOne({ userId: '1234' });
-console.log(foo);
+// const foo = await Card.find({ userId: '646f05c55706b3d59520426b' });
+// const bar = await User.find({});
+// console.log(bar);
 
-// console.log(cardFromMongoDb);
+async function getCardNew(userId: string) {
+  try {
+    return await Card.find({ userId });
+  } catch (error) {
+    return error;
+  }
+}
+
+async function postCardNew({
+  userId,
+  question,
+  answer,
+  submitDate,
+  stackCount,
+}: Card) {
+  const card = new Card({
+    userId,
+    question,
+    answer,
+    submitDate,
+    stackCount,
+  });
+  try {
+    return await card.save();
+  } catch (error) {
+    return error;
+  }
+}
+
+async function patchCardNew({
+  question,
+  answer,
+  stackCount,
+  submitDate,
+  userId,
+  _id,
+}: Card) {
+  try {
+    return await Card.findByIdAndUpdate(_id, {
+      question,
+      answer,
+      stackCount,
+      submitDate,
+      userId,
+    });
+  } catch (error) {
+    return error;
+  }
+}
+
+async function deleteCardNew(_id: string) {
+  try {
+    return await Card.findByIdAndDelete(_id);
+  } catch (error) {
+    return error;
+  }
+}
+
+// test
+// const create = await postCardNew({
+//   userId: '1234',
+//   question: '도커는 독하다',
+//   answer: '도큐사우르스가 더 독하다',
+//   stackCount: 9999,
+//   submitDate: new Date(),
+// });
+// console.log('create', create, create._id);
+// const read = await getCardNew('1234');
+// console.log('read', read, read?._id);
+// const update = await patchCardNew({
+//   _id: create._id,
+//   question: '도커는 돚거',
+//   answer: '돚거가 도커',
+//   stackCount: 0,
+//   submitDate: new Date(),
+//   userId: '1234',
+// });
+// const read2 = await getCardNew('1234');
+// console.log('read2', read2);
+// console.log('update', update);
+// const deleteCard = await deleteCardNew(create._id);
+// console.log('deleteCard', deleteCard);
+
+// --------------------------------------------------------------------------
+
+const MONGO_URI = Deno.env.get('MONGO_URI') || config()['MONGO_URI'];
+const CARD_API_KEY = Deno.env.get('CARD_API_KEY') || config()['CARD_API_KEY'];
 
 type Collection = {
   dataSource: string;

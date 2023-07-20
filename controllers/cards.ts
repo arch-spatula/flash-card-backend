@@ -1,7 +1,7 @@
 import { helpers } from '../deps.ts';
 import type { Context } from '../deps.ts';
 import MongoAPI from '../api/mongoAPI.ts';
-import CardRecord from '../model/cards.ts';
+import { CardRecord } from '../model/cards.ts';
 
 const mongoAPI = MongoAPI.getInstance();
 
