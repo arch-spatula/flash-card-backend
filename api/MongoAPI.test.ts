@@ -1,9 +1,9 @@
 import { CardRecord } from '../model/cards.ts';
 import MongoAPI, {
-  getCardNew,
-  postCardNew,
-  patchCardNew,
-  deleteCardNew,
+  getCard,
+  postCard,
+  patchCard,
+  removeCard,
 } from './mongoAPI.ts';
 import { assert, assertEquals, beforeEach } from '../deps.ts';
 
@@ -27,15 +27,15 @@ Deno.test('postCards should insert a card into the database', async () => {
   };
 
   // await superdeno()
-  assert(postCardNew(newCard));
+  assert(postCard(newCard));
 
-  const insertedCard = await postCardNew(newCard);
+  const insertedCard = await postCard(newCard);
   assertEquals(insertedCard.question, newCard.question);
   assertEquals(insertedCard.answer, newCard.answer);
 });
 
 Deno.test('getCards should fetch cards from the database', async () => {
-  const response = await getCardNew('user1234');
+  const response = await getCard('user1234');
 
   // assertEquals(response, 200);
   assert(Array.isArray(response));

@@ -1,5 +1,5 @@
 import type { Context } from '../deps.ts';
-import { getUserNew, postUserNew } from '../api/mongoAPI.ts';
+import { getUser, postUser } from '../api/mongoAPI.ts';
 import {
   generateAccessToken,
   generateRefreshToken,
@@ -18,7 +18,7 @@ async function signUp({ request, response }: Context) {
       throw Error('이메일 혹은 비밀 번호가 없습니다.');
     }
 
-    const document = await getUserNew(input.email);
+    const document = await getUser(input.email);
     if (document === undefined) throw Error('document is undefined');
 
     if (document !== null) {
@@ -27,7 +27,7 @@ async function signUp({ request, response }: Context) {
       const passwordSalt = await genSalt(8);
       const passwordHash = await hash(input.password, passwordSalt);
 
-      await postUserNew({
+      await postUser({
         email: input.email,
         passwordHash,
         passwordSalt,
@@ -56,7 +56,7 @@ async function signIn({ request, response }: Context) {
       throw Error('이메일 혹은 비밀번호가 없습니다.');
     }
 
-    const document = await getUserNew(input.email);
+    const document = await getUser(input.email);
 
     if (document === null) throw Error('이메일이 없습니다.');
     else {

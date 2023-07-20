@@ -9,7 +9,7 @@ const MONGO_URL = Deno.env.get('MONGO_URL') || config()['MONGO_URL'];
 
 await mongoose.connect(MONGO_URL);
 
-async function getCardNew(userId: string) {
+async function getCard(userId: string) {
   try {
     return await Card.find({ userId });
   } catch (error) {
@@ -17,7 +17,7 @@ async function getCardNew(userId: string) {
   }
 }
 
-async function postCardNew(document: Card) {
+async function postCard(document: Card) {
   const card = new Card(document);
   try {
     return await card.save();
@@ -26,7 +26,7 @@ async function postCardNew(document: Card) {
   }
 }
 
-async function patchCardNew(
+async function patchCard(
   _id: string,
   { question, answer, stackCount, submitDate, userId }: Card
 ) {
@@ -43,7 +43,7 @@ async function patchCardNew(
   }
 }
 
-async function deleteCardNew(_id: string) {
+async function deleteCard(_id: string) {
   try {
     return await Card.findByIdAndDelete(_id);
   } catch (error) {
@@ -51,7 +51,7 @@ async function deleteCardNew(_id: string) {
   }
 }
 
-async function postUserNew(user: User) {
+async function postUser(user: User) {
   const newUser = new User(user);
   try {
     return await newUser.save();
@@ -60,7 +60,7 @@ async function postUserNew(user: User) {
   }
 }
 
-async function getUserNew(email: string) {
+async function getUser(email: string) {
   try {
     return await User.findOne({ email });
   } catch (error) {
@@ -68,14 +68,7 @@ async function getUserNew(email: string) {
   }
 }
 
-export {
-  getUserNew,
-  postUserNew,
-  getCardNew,
-  postCardNew,
-  patchCardNew,
-  deleteCardNew,
-};
+export { getUser, postUser, getCard, postCard, patchCard, deleteCard };
 
 // --------------------------------------------------------------------------
 

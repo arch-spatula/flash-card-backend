@@ -1,6 +1,6 @@
 import { assertEquals } from '../deps.ts';
 import { beforeEach } from '../deps.ts';
-import { addCard, deleteCard, getCards, updateCard } from './cards.ts';
+import { addCard, removeCard, getCards, updateCard } from './cards.ts';
 import type { Context } from '../deps.ts';
 import MongoAPI from '../api/mongoAPI.ts';
 import CardRecord from '../model/cards.ts';

@@ -1,7 +1,7 @@
 import { Router } from '../deps.ts';
 import {
   addCard,
-  deleteCard,
+  removeCard,
   getCards,
   updateCard,
 } from '../controllers/cards.ts';
@@ -18,7 +18,7 @@ router
   .get('/api/card', authMiddleware, getCards)
   .post('/api/card', authMiddleware, addCard)
   .patch('/api/card/:id', authMiddleware, updateCard)
-  .delete('/api/card/:id', authMiddleware, deleteCard)
+  .delete('/api/card/:id', authMiddleware, removeCard)
   .post('/api/auth/signup', signUp)
   .post('/api/auth/signin', signIn)
   .post('/api/auth/refresh', refreshUserAccessToken);
