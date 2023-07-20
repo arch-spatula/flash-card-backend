@@ -3,25 +3,11 @@ import { config } from '../deps.ts';
 import type { CardRecord } from '../model/cards.ts';
 import Card from '../model/cards.ts';
 import User from '../model/user.ts';
-import mongoose from 'npm:mongoose@^7.4.0';
+import mongoose, { Types } from 'npm:mongoose@^7.4.0';
 
 const MONGO_URL = Deno.env.get('MONGO_URL') || config()['MONGO_URL'];
 
 await mongoose.connect(MONGO_URL);
-
-console.log(mongoose.connection.name);
-
-// const card = new Card({
-//   userId: '1234',
-//   question: 'asdf',
-//   answer: 'asdf',
-//   submitDate: Date.now(),
-//   stackCount: 9999,
-// });
-
-// const foo = await Card.find({ userId: '646f05c55706b3d59520426b' });
-// const bar = await User.find({});
-// console.log(bar);
 
 async function getCardNew(userId: string) {
   try {
@@ -31,20 +17,8 @@ async function getCardNew(userId: string) {
   }
 }
 
-async function postCardNew({
-  userId,
-  question,
-  answer,
-  submitDate,
-  stackCount,
-}: Card) {
-  const card = new Card({
-    userId,
-    question,
-    answer,
-    submitDate,
-    stackCount,
-  });
+async function postCardNew(document: Card) {
+  const card = new Card(document);
   try {
     return await card.save();
   } catch (error) {
@@ -81,30 +55,31 @@ async function deleteCardNew(_id: string) {
   }
 }
 
-// test
-// const create = await postCardNew({
-//   userId: '1234',
-//   question: '도커는 독하다',
-//   answer: '도큐사우르스가 더 독하다',
-//   stackCount: 9999,
-//   submitDate: new Date(),
-// });
-// console.log('create', create, create._id);
-// const read = await getCardNew('1234');
-// console.log('read', read, read?._id);
-// const update = await patchCardNew({
-//   _id: create._id,
-//   question: '도커는 돚거',
-//   answer: '돚거가 도커',
-//   stackCount: 0,
-//   submitDate: new Date(),
-//   userId: '1234',
-// });
-// const read2 = await getCardNew('1234');
-// console.log('read2', read2);
-// console.log('update', update);
-// const deleteCard = await deleteCardNew(create._id);
-// console.log('deleteCard', deleteCard);
+async function postUserNew(user: User) {
+  const newUser = new User(user);
+  try {
+    return await newUser.save();
+  } catch (error) {
+    return error;
+  }
+}
+
+async function getUserNew(email: string) {
+  try {
+    return await User.findOne({ email });
+  } catch (error) {
+    return error;
+  }
+}
+
+export {
+  getUserNew,
+  postUserNew,
+  getCardNew,
+  postCardNew,
+  patchCardNew,
+  deleteCardNew,
+};
 
 // --------------------------------------------------------------------------
 

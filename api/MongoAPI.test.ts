@@ -1,33 +1,46 @@
 import { CardRecord } from '../model/cards.ts';
-import MongoAPI from './mongoAPI.ts';
+import MongoAPI, {
+  getCardNew,
+  postCardNew,
+  patchCardNew,
+  deleteCardNew,
+} from './mongoAPI.ts';
 import { assert, assertEquals, beforeEach } from '../deps.ts';
 
-Deno.test('MongoAPI', () => {
-  let mongoAPI: MongoAPI;
-
-  beforeEach(() => {
-    mongoAPI = MongoAPI.getInstance();
-  });
-});
+import { superdeno } from 'https://deno.land/x/superdeno@4.8.0/mod.ts';
 
 const mongoAPI = MongoAPI.getInstance();
 
-Deno.test('getCards should fetch cards from the database', async () => {
-  const response = await mongoAPI.getCards('user123');
-  const data = await response;
+Deno.test('server', () => {
+  let mockServer;
 
-  assertEquals(response.status, 200);
-  assert(Array.isArray(data));
-  // 여기에서 데이터에 대한 추가 검증을 수행할 수 있습니다.
+  beforeEach(() => {
+    mockServer = Deno.serve((req) => new Response('hello world'));
+  });
 });
 
 Deno.test('postCards should insert a card into the database', async () => {
-  const card = new CardRecord('Question', 'Answer', new Date(), 0, 'user123');
-  const response = await mongoAPI.postCards(card);
-  const data = await response.json();
+  const newCard = {
+    question: 'Question',
+    answer: 'Answer',
+    submitDate: new Date(),
+    stackCount: 0,
+    userId: 'user1234',
+  };
 
-  assertEquals(response.status, 200);
-  assert(data.getOwnPropertyNames('insertedId'));
+  // await superdeno()
+  assert(postCardNew(newCard));
+
+  const insertedCard = await postCardNew(newCard);
+  assertEquals(insertedCard.question, newCard.question);
+  assertEquals(insertedCard.answer, newCard.answer);
+});
+
+Deno.test('getCards should fetch cards from the database', async () => {
+  const response = await getCardNew('user1234');
+
+  // assertEquals(response, 200);
+  assert(Array.isArray(response));
   // 여기에서 데이터에 대한 추가 검증을 수행할 수 있습니다.
 });
 

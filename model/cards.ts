@@ -11,7 +11,7 @@ const cardSchema = new Schema<Card>(
   { versionKey: false }
 );
 
-export default model('Card', cardSchema, 'cards');
+export default model('Card', cardSchema, 'card');
 
 class CardRecord {
   private _id?: string;
