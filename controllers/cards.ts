@@ -1,9 +1,11 @@
 import { helpers } from '../deps.ts';
 import type { Context } from '../deps.ts';
-import MongoAPI from '../api/mongoAPI.ts';
-import { CardRecord } from '../model/cards.ts';
-
-const mongoAPI = MongoAPI.getInstance();
+import {
+  deleteCardNew,
+  getCardNew,
+  patchCardNew,
+  postCardNew,
+} from '../api/mongoAPI.ts';
 
 async function addCard({ request, response, state }: Context) {
   try {
@@ -19,15 +21,14 @@ async function addCard({ request, response, state }: Context) {
         'question, answer, submitDate, stackCount 중 값이 1개 없습니다.'
       );
 
-    const card = new CardRecord(
+    response.status = 201;
+    response.body = await postCardNew({
       question,
       answer,
       submitDate,
       stackCount,
-      userId
-    );
-    response.status = 201;
-    response.body = await mongoAPI.postCards(card);
+      userId,
+    });
   } catch (error) {
     response.status = 400;
     response.body = {
@@ -42,7 +43,7 @@ async function getCards({ response, state }: Context) {
     const userId = state.userId ?? '';
 
     response.status = 200;
-    response.body = await mongoAPI.getCards(userId);
+    response.body = await getCardNew(userId);
   } catch (error) {
     response.status = 400;
     response.body = {
@@ -67,17 +68,14 @@ async function updateCard(ctx: Context) {
         'question, answer, submitDate, stackCount 중 값이 1개 없습니다.'
       );
 
-    const card = new CardRecord(
+    response.status = 200;
+    response.body = await patchCardNew(id, {
+      userId,
       question,
       answer,
       submitDate,
       stackCount,
-      userId,
-      id
-    );
-
-    response.status = 200;
-    response.body = await mongoAPI.patchCards(card);
+    });
   } catch (error) {
     response.status = 400;
     response.body = {
@@ -92,7 +90,7 @@ async function deleteCard(ctx: Context) {
   const { id } = helpers.getQuery(ctx, { mergeParams: true });
   try {
     response.status = 204;
-    await mongoAPI.deleteCards(id);
+    await deleteCardNew(id);
     response.body = null;
   } catch (error) {
     response.status = 400;

@@ -7,8 +7,6 @@ import MongoAPI, {
 } from './mongoAPI.ts';
 import { assert, assertEquals, beforeEach } from '../deps.ts';
 
-import { superdeno } from 'https://deno.land/x/superdeno@4.8.0/mod.ts';
-
 const mongoAPI = MongoAPI.getInstance();
 
 Deno.test('server', () => {

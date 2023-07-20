@@ -26,14 +26,10 @@ async function postCardNew(document: Card) {
   }
 }
 
-async function patchCardNew({
-  question,
-  answer,
-  stackCount,
-  submitDate,
-  userId,
-  _id,
-}: Card) {
+async function patchCardNew(
+  _id: string,
+  { question, answer, stackCount, submitDate, userId }: Card
+) {
   try {
     return await Card.findByIdAndUpdate(_id, {
       question,
