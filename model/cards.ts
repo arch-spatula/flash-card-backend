@@ -1,3 +1,18 @@
+import { model, Schema } from 'npm:mongoose@^7.4.0';
+
+const cardSchema = new Schema<Card>(
+  {
+    question: { type: String, required: true },
+    answer: { type: String, required: true },
+    submitDate: { type: Date, required: true },
+    stackCount: { type: Number, required: true },
+    userId: { type: String, required: true },
+  },
+  { versionKey: false }
+);
+
+export default model('Card', cardSchema, 'card');
+
 class CardRecord {
   private _id?: string;
   private question: string;
@@ -46,4 +61,4 @@ class CardRecord {
 //   "0"
 // );
 
-export default CardRecord;
+export { CardRecord };

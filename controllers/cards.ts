@@ -1,9 +1,6 @@
 import { helpers } from '../deps.ts';
 import type { Context } from '../deps.ts';
-import MongoAPI from '../api/mongoAPI.ts';
-import CardRecord from '../model/cards.ts';
-
-const mongoAPI = MongoAPI.getInstance();
+import { getCard, patchCard, postCard, deleteCard } from '../api/mongoAPI.ts';
 
 async function addCard({ request, response, state }: Context) {
   try {
@@ -19,15 +16,14 @@ async function addCard({ request, response, state }: Context) {
         'question, answer, submitDate, stackCount 중 값이 1개 없습니다.'
       );
 
-    const card = new CardRecord(
+    response.status = 201;
+    response.body = await postCard({
       question,
       answer,
       submitDate,
       stackCount,
-      userId
-    );
-    response.status = 201;
-    response.body = await mongoAPI.postCards(card);
+      userId,
+    });
   } catch (error) {
     response.status = 400;
     response.body = {
@@ -42,7 +38,7 @@ async function getCards({ response, state }: Context) {
     const userId = state.userId ?? '';
 
     response.status = 200;
-    response.body = await mongoAPI.getCards(userId);
+    response.body = await getCard(userId);
   } catch (error) {
     response.status = 400;
     response.body = {
@@ -67,17 +63,14 @@ async function updateCard(ctx: Context) {
         'question, answer, submitDate, stackCount 중 값이 1개 없습니다.'
       );
 
-    const card = new CardRecord(
+    response.status = 200;
+    response.body = await patchCard(id, {
+      userId,
       question,
       answer,
       submitDate,
       stackCount,
-      userId,
-      id
-    );
-
-    response.status = 200;
-    response.body = await mongoAPI.patchCards(card);
+    });
   } catch (error) {
     response.status = 400;
     response.body = {
@@ -87,12 +80,12 @@ async function updateCard(ctx: Context) {
   }
 }
 
-async function deleteCard(ctx: Context) {
+async function removeCard(ctx: Context) {
   const { response } = ctx;
   const { id } = helpers.getQuery(ctx, { mergeParams: true });
   try {
+    await deleteCard(id);
     response.status = 204;
-    await mongoAPI.deleteCards(id);
     response.body = null;
   } catch (error) {
     response.status = 400;
@@ -103,4 +96,4 @@ async function deleteCard(ctx: Context) {
   }
 }
 
-export { getCards, addCard, updateCard, deleteCard };
+export { getCards, addCard, updateCard, removeCard };
