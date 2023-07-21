@@ -1,9 +1,8 @@
-import { updateCard } from '../controllers/cards.ts';
 import { config } from '../deps.ts';
-import type { CardRecord } from '../model/cards.ts';
 import Card from '../model/cards.ts';
 import User from '../model/user.ts';
-import mongoose, { Types } from 'npm:mongoose@^7.4.0';
+// import mongoose, { Types } from 'npm:mongoose@^7.4.0';
+import mongoose from 'https://esm.sh/mongoose@^7.4.0';
 
 const MONGO_URL = Deno.env.get('MONGO_URL') || config()['MONGO_URL'];
 
