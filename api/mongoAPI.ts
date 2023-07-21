@@ -1,8 +1,8 @@
-import { config } from "https://deno.land/x/dotenv@v3.2.2/mod.ts";
-import CardRecord from "../model/cards.ts";
+import { config } from 'https://deno.land/x/dotenv@v3.2.2/mod.ts';
+import CardRecord from '../model/cards.ts';
 
-const MONGO_URI = Deno.env.get("MONGO_URI") || config()["MONGO_URI"];
-const CARD_API_KEY = Deno.env.get("CARD_API_KEY") || config()["CARD_API_KEY"];
+const MONGO_URI = Deno.env.get('MONGO_URI') || config()['MONGO_URI'];
+const CARD_API_KEY = Deno.env.get('CARD_API_KEY') || config()['CARD_API_KEY'];
 
 type Collection = {
   dataSource: string;
@@ -20,7 +20,7 @@ class MongoAPI {
   private baseURL: string;
   private options: {
     method: string;
-    headers: { "Content-Type": string; "api-key": string };
+    headers: { 'Content-Type': string; 'api-key': string };
     body: BodyInit;
   };
   private cardBody: Collection;
@@ -28,22 +28,22 @@ class MongoAPI {
   private constructor() {
     this.baseURL = MONGO_URI;
     this.options = {
-      method: "POST",
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json",
-        "api-key": CARD_API_KEY,
+        'Content-Type': 'application/json',
+        'api-key': CARD_API_KEY,
       },
-      body: "",
+      body: '',
     };
     this.cardBody = {
-      dataSource: "Cluster0",
-      database: "cards_db",
-      collection: "cards",
+      dataSource: 'Cluster0',
+      database: 'cards_db',
+      collection: 'card',
     };
     this.userBody = {
-      dataSource: "Cluster0",
-      database: "cards_db",
-      collection: "user",
+      dataSource: 'Cluster0',
+      database: 'cards_db',
+      collection: 'user',
     };
   }
 
