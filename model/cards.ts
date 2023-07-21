@@ -1,4 +1,4 @@
-import { model, Schema } from 'https://esm.sh/mongoose@7.4.0';
+import { Schema, model } from '../deps.ts';
 
 const cardSchema = new Schema<Card>(
   {

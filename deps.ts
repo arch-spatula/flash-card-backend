@@ -42,3 +42,8 @@ export {
   assertInstanceOf,
   assertRejects,
 } from 'https://deno.land/std@0.188.0/testing/asserts.ts';
+
+import mongoose from 'npm:mongoose@^7.4.0';
+export { mongoose };
+
+export * from 'npm:mongoose@^7.4.0';
