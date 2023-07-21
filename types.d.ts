@@ -1,5 +1,5 @@
 type Card = {
-  _id?: import('npm:mongoose@^7.4.0').Types.ObjectId;
+  _id?: import('https://esm.sh/mongoose@7.4.0').Types.ObjectId;
   question: string;
   answer: string;
   submitDate: Date;
@@ -8,7 +8,7 @@ type Card = {
 };
 
 type User = {
-  _id?: import('npm:mongoose@^7.4.0').Types.ObjectId;
+  _id?: import('https://esm.sh/mongoose@7.4.0').Types.ObjectId;
   email: string;
   passwordHash: string;
   passwordSalt: string;
