@@ -1,6 +1,6 @@
 import { Context, hashPromise } from '../deps.ts';
 import { assertEquals } from '../deps.ts';
-// import MongoAPI from '../api/mongoAPI.ts';
+import MongoAPI from '../api/mongoAPI.ts';
 import { signIn, signUp } from './users.ts';
 
 // 테스트용 가짜 데이터

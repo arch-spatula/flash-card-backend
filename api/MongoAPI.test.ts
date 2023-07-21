@@ -1,6 +1,13 @@
 import { CardRecord } from '../model/cards.ts';
-import { getCard, postCard, patchCard, deleteCard } from './mongoAPI.ts';
+import MongoAPI, {
+  getCard,
+  postCard,
+  patchCard,
+  removeCard,
+} from './mongoAPI.ts';
 import { assert, assertEquals, beforeEach } from '../deps.ts';
+
+const mongoAPI = MongoAPI.getInstance();
 
 Deno.test('server', () => {
   let mockServer;
@@ -44,31 +51,31 @@ Deno.test('patchCards should update a card in the database', async () => {
     'user123',
     'card123'
   );
-  // const response = await mongoAPI.patchCards(card);
-  // const data = await response.json();
+  const response = await mongoAPI.patchCards(card);
+  const data = await response.json();
 
-  // assertEquals(response.status, 200);
-  // assert(data.getOwnPropertyNames('modifiedCount'));
+  assertEquals(response.status, 200);
+  assert(data.getOwnPropertyNames('modifiedCount'));
   // 여기에서 데이터에 대한 추가 검증을 수행할 수 있습니다.
 });
 
 Deno.test('deleteCards should delete a card from the database', async () => {
   const cardId = 'card123';
-  // const response = await mongoAPI.deleteCards(cardId);
-  // const data = await response.json();
+  const response = await mongoAPI.deleteCards(cardId);
+  const data = await response.json();
 
-  // assertEquals(response.status, 200);
-  // assert(data.getOwnPropertyNames('deletedCount'));
+  assertEquals(response.status, 200);
+  assert(data.getOwnPropertyNames('deletedCount'));
   // 여기에서 데이터에 대한 추가 검증을 수행할 수 있습니다.
 });
 
 Deno.test('getUser should fetch user from the database', async () => {
   const email = 'user@example.com';
-  // const response = await mongoAPI.getUser(email);
-  // const data = await response.json();
+  const response = await mongoAPI.getUser(email);
+  const data = await response.json();
 
-  // assertEquals(response.status, 200);
-  // assert(data.getOwnPropertyNames('email'));
+  assertEquals(response.status, 200);
+  assert(data.getOwnPropertyNames('email'));
   // 데이터에 대한 추가 검증을 수행할 수 있습니다.
 });
 
@@ -78,11 +85,11 @@ Deno.test('postUser should insert a user into the database', async () => {
     passwordHash: 'hashedPassword',
     passwordSalt: 'salt',
   };
-  // const response = await mongoAPI.postUser(user);
-  // const data = await response.json();
+  const response = await mongoAPI.postUser(user);
+  const data = await response.json();
 
-  // assertEquals(response.status, 200);
-  // assert(data.getOwnPropertyNames('insertedId'));
+  assertEquals(response.status, 200);
+  assert(data.getOwnPropertyNames('insertedId'));
   // 데이터에 대한 추가 검증을 수행할 수 있습니다.
 });
 
