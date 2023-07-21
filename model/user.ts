@@ -1,4 +1,4 @@
-import { model, Schema } from 'npm:mongoose@^7.4.0';
+import { model, Schema } from 'https://esm.sh/mongoose@7.4.0';
 
 const userSchema = new Schema<{
   email: string;
