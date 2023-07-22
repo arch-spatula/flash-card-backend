@@ -1,9 +1,41 @@
-import { assertEquals } from '../deps.ts';
+import { Application, Router, assertEquals, superoak } from '../deps.ts';
 import { beforeEach } from '../deps.ts';
 import { addCard, deleteCard, getCards, updateCard } from './cards.ts';
 import type { Context } from '../deps.ts';
 import MongoAPI from '../api/mongoAPI.ts';
 import CardRecord from '../model/cards.ts';
+
+// import { Application, Router } from 'https://deno.land/x/oak@v10.4.0/mod.ts';
+
+const router = new Router();
+router
+  .get('/api/card', getCards)
+  .post('/api/card', addCard)
+  .patch('/api/card', updateCard)
+  .delete('/api/card', deleteCard);
+
+const app = new Application();
+app.use(router.routes());
+app.use(router.allowedMethods());
+
+// Send simple GET request
+Deno.test('it should support the Oak framework', async () => {
+  const request = await superoak(app);
+  await request.get('/').expect('Hello Deno!');
+});
+
+// Custom requests can be built with the superagent API
+// https://visionmedia.github.io/superagent/#post--put-requests.
+Deno.test('it should allow post requests', async () => {
+  const request = await superoak(app);
+  await request
+    .post('/user')
+    .set('Content-Type', 'application/json')
+    .send('{"name":"superoak"}')
+    .expect(200)
+    .expect('Post!');
+});
+
 // 테스트 코드를 작성할 때 필요한 모듈을 가져옵니다.
 // Mocking
 // class MockMongoAPI implements Partial<MongoAPI> {
