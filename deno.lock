@@ -247,6 +247,7 @@
     "https://deno.land/x/superdeno@4.8.0/src/superagent.ts": "8f60187f9278b154ef6bccf09a5ff7d45f81103ad0ce02d45518a6bbe63ce764",
     "https://deno.land/x/superdeno@4.8.0/src/superdeno.ts": "2e2cd4898961ac7688f0c2a4b210bf560a338f6601bd231d74bf8a0956880311",
     "https://deno.land/x/superdeno@4.8.0/src/test.ts": "89386c2c207179cd1854baf40f37cd1c4a5d312f4605d8cdc4d495ff3fd14d10",
+    "https://deno.land/x/superdeno@4.8.0/src/types.ts": "0fc4a0a1acf4c3acba3e3d956a9e8917ce32cd47dbb8e75ffadec21a43a8e52f",
     "https://deno.land/x/superdeno@4.8.0/src/utils.ts": "458c1699f73e348745b9b4d081e005dbc12d050fd2899ebf4f919515823ba1c0",
     "https://deno.land/x/superdeno@4.8.0/src/xhrSham.js": "91f28215c07af47155c7abe711a097d67d89916a80d666ef6d26fab3e5179af2",
     "https://deno.land/x/superdeno@4.8.0/version.ts": "c84185c6cf0c198d406ae8892cc56a981002cce5d09e9b6293718bf02ad1d2c4",
