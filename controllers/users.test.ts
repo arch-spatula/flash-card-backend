@@ -1,11 +1,12 @@
 import { Application, Router, superoak } from '../deps.ts';
-import { signIn, signUp, refreshUserAccessToken } from './users.ts';
+import { signIn, signUp, refreshUserAccessToken, checkEmail } from './users.ts';
 
 const router = new Router();
 router
   .post('/api/auth/signup', signUp)
   .post('/api/auth/signin', signIn)
-  .post('/api/auth/refresh', refreshUserAccessToken);
+  .post('/api/auth/refresh', refreshUserAccessToken)
+  .post('/api/auth/check-email', checkEmail);
 
 const app = new Application();
 app.use(router.routes());
@@ -53,4 +54,24 @@ Deno.test('it should not refresh invalid token', async () => {
     .post('/api/auth/signup')
     .set({ Headers: { Application: 'Bearer qwer1234' } })
     .expect(400);
+});
+
+Deno.test('it should return error to existing email', async () => {
+  const request = await superoak(app);
+  await request
+    .post('/api/auth/check-email')
+    .send({
+      email: 'test@example.com',
+    })
+    .expect(409);
+});
+
+Deno.test('it should return null to nonexisting email', async () => {
+  const request = await superoak(app);
+  await request
+    .post('/api/auth/check-email')
+    .send({
+      email: 'notexisting@example.com',
+    })
+    .expect(204);
 });

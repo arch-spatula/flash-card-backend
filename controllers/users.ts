@@ -47,16 +47,45 @@ async function signUp({ request, response }: Context) {
   }
 }
 
+async function checkEmail({ request, response }: Context) {
+  class ConflictError extends Error {}
+  try {
+    if (!request.hasBody) throw Error('body가 없습니다.');
+    const { email } = await request.body().value;
+    if (!email) throw Error('이메일이 없습니다.');
+    const document = await mongoAPI.getUser(email);
+
+    if (document === null) {
+      response.status = 204;
+      response.body = null;
+    } else {
+      throw new ConflictError('email Conflict');
+    }
+  } catch (error) {
+    if (error instanceof ConflictError) {
+      response.status = 409;
+      response.body = {
+        success: false,
+        msg: `${error}`,
+      };
+    } else {
+      response.status = 400;
+      response.body = {
+        success: false,
+        msg: `${error}`,
+      };
+    }
+  }
+}
+
 async function signIn({ request, response }: Context) {
   try {
-    if (!request.hasBody) {
-      throw Error('body가 없습니다.');
-    }
+    if (!request.hasBody) throw Error('body가 없습니다.');
 
     const input = await request.body().value;
-    if (!input.email || !input.password) {
+
+    if (!input.email || !input.password)
       throw Error('이메일 혹은 비밀번호가 없습니다.');
-    }
 
     const document = await mongoAPI.getUser(input.email);
     if (document === null) throw Error('이메일이 없습니다.');
@@ -124,4 +153,4 @@ async function deleteUser({ response, state }: Context) {
   }
 }
 
-export { signUp, signIn, refreshUserAccessToken, deleteUser };
+export { signUp, signIn, refreshUserAccessToken, checkEmail, deleteUser };

@@ -10,6 +10,7 @@ import {
   refreshUserAccessToken,
   signIn,
   signUp,
+  checkEmail,
 } from '../controllers/users.ts';
 import { authMiddleware } from '../middleware/authMiddleware.ts';
 
@@ -23,6 +24,7 @@ router
   .post('/api/auth/signup', signUp)
   .post('/api/auth/signin', signIn)
   .post('/api/auth/refresh', refreshUserAccessToken)
+  .post('/api/auth/check-email', checkEmail)
   .delete('/api/auth/delete', authMiddleware, deleteUser);
 
 export default router;
