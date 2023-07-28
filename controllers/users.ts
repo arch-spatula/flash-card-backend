@@ -141,7 +141,7 @@ async function refreshUserAccessToken({ request, response }: Context) {
 async function deleteUser({ response, state }: Context) {
   const id = String(state.userId);
   try {
-    await mongoAPI.deleteCards(id);
+    await mongoAPI.deleteUser(id);
     response.status = 204;
     response.body = null;
   } catch (error) {
