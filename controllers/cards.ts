@@ -91,8 +91,8 @@ async function deleteCard(ctx: Context) {
   const { response } = ctx;
   const { id } = helpers.getQuery(ctx, { mergeParams: true });
   try {
-    response.status = 204;
     await mongoAPI.deleteCards(id);
+    response.status = 204;
     response.body = null;
   } catch (error) {
     response.status = 400;

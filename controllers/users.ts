@@ -138,4 +138,19 @@ async function refreshUserAccessToken({ request, response }: Context) {
   }
 }
 
-export { signUp, signIn, refreshUserAccessToken, checkEmail };
+async function deleteUser({ response, state }: Context) {
+  const id = String(state.userId);
+  try {
+    await mongoAPI.deleteUser(id);
+    response.status = 204;
+    response.body = null;
+  } catch (error) {
+    response.status = 400;
+    response.body = {
+      success: false,
+      msg: `${error}`,
+    };
+  }
+}
+
+export { signUp, signIn, refreshUserAccessToken, checkEmail, deleteUser };

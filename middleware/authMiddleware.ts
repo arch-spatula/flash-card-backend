@@ -1,5 +1,5 @@
 import type { Middleware } from '../deps.ts';
-import { convertTokenToUserId, refreshAccessToken } from '../util/token.ts';
+import { convertTokenToUserId } from '../util/token.ts';
 
 class BadRequestError extends Error {}
 class AuthorizationError extends Error {}

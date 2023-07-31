@@ -118,6 +118,30 @@ auth와 관련이 없은 요청을 보낼 때는 위 토큰을 header에 `Author
 }
 ```
 
+#### delete user
+
+요청
+
+- URL: `/api/auth/delete`
+- Method: `DELETE`
+- Headers:
+  - Content-Type: `application/json`
+  - Authorization: `Bearer (access_token)`
+- Body: (없음)
+
+```json
+// 없음
+```
+
+응답 예시
+
+- Status: `204`
+- Body: (없음)
+
+```json
+// body 없음
+```
+
 #### check email
 
 요청

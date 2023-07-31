@@ -6,6 +6,7 @@ import {
   updateCard,
 } from '../controllers/cards.ts';
 import {
+  deleteUser,
   refreshUserAccessToken,
   signIn,
   signUp,
@@ -23,6 +24,7 @@ router
   .post('/api/auth/signup', signUp)
   .post('/api/auth/signin', signIn)
   .post('/api/auth/refresh', refreshUserAccessToken)
-  .post('/api/auth/check-email', checkEmail);
+  .post('/api/auth/check-email', checkEmail)
+  .delete('/api/auth/delete', authMiddleware, deleteUser);
 
 export default router;
