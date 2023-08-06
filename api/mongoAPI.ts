@@ -176,6 +176,21 @@ class MongoAPI {
       return error;
     }
   }
+
+  async deleteUser($oid: string) {
+    try {
+      const result = await fetch(`${this.baseURL}/deleteOne`, {
+        ...this.options,
+        body: JSON.stringify({
+          ...this.userBody,
+          filter: { _id: { $oid } },
+        }),
+      });
+      return result.json();
+    } catch (error) {
+      return error;
+    }
+  }
 }
 
 export default MongoAPI;

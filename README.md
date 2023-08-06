@@ -20,6 +20,8 @@
 https://flash-card-backend.deno.dev/
 ```
 
+참고. deno deploy는 무료 플랜을 활용 중입니다. 유료전환하면 위 url은 삭제할 것입니다. 클라이언트는 url은 환경변수로 접근하기 바랍니다.
+
 ### Auth
 
 #### Sign Up
@@ -113,6 +115,72 @@ auth와 관련이 없은 요청을 보낼 때는 위 토큰을 header에 `Author
 {
   "success": true,
   "access_token": "zxcv9876"
+}
+```
+
+#### delete user
+
+요청
+
+- URL: `/api/auth/delete`
+- Method: `DELETE`
+- Headers:
+  - Content-Type: `application/json`
+  - Authorization: `Bearer (access_token)`
+- Body: (없음)
+
+```json
+// 없음
+```
+
+응답 예시
+
+- Status: `204`
+- Body: (없음)
+
+```json
+// body 없음
+```
+
+#### check email
+
+요청
+
+- URL: `/api/auth/check-email`
+- Method: `POST`
+- Headers:
+  - Content-Type: `application/json`
+- Body:
+  - email: `string`
+
+```json
+{
+  "email": "username@email.com"
+}
+```
+
+응답 예시
+
+##### 중복 없음
+
+- Status: `204`
+- Body: (없음)
+
+```json
+// body 없음
+```
+
+##### 중복 발생
+
+- Status: `409`
+- Body:
+  - success: `boolean`
+  - msg: `string`
+
+```json
+{
+  "success": false,
+  "msg": "Error: email Conflict"
 }
 ```
 
